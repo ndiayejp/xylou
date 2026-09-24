@@ -14,7 +14,7 @@ Les maquettes UX/UI (PDF) seront ajoutées dans `docs/` au moment de travailler 
 
 ## État actuel vs cible
 
-Le projet sort tout juste de l'installation : Laravel 12 + Breeze (Inertia 2 + Vue 3 en **JavaScript**), Tailwind 3 via PostCSS, Pest 3, Pint. Base de données PostgreSQL (`.env.example`), tests sur SQLite en mémoire (`phpunit.xml`) — éviter le SQL propre à Postgres dans ce que les tests exécutent, ou basculer les tests sur Postgres.
+Le projet sort tout juste de l'installation : Laravel 12 + Breeze (Inertia 2 + Vue 3 en **JavaScript**), Tailwind 3 via PostCSS, Pest 3, Pint. Base de données : PostgreSQL 18 natif Windows (service `postgresql-x64-18`, port **5433**, base/utilisateur/mot de passe `xylou`) ; un PostgreSQL 17 sans rapport occupe le port 5432. Tests sur SQLite en mémoire (`phpunit.xml`) — éviter le SQL propre à Postgres dans ce que les tests exécutent, ou basculer les tests sur Postgres.
 
 L'étape 0 du plan (§13) reste à faire. **Pas encore en place** : TypeScript, `strict_types`, PHP ≥ 8.3 (`composer.json` accepte `^8.2`), Sail, Redis/Horizon, Reverb, Larastan, Rector, spatie/laravel-data et typescript-transformer, spatie/laravel-permission, vue-i18n, ESLint/Prettier, Vitest, Playwright + axe, `app/Domain/*`, CI GitHub Actions, `docs/adr/`. Les scripts `composer lint`, `composer analyse`, `npm run lint`, `npm run typecheck`, `npm run test`, `npm run test:e2e` n'existent pas encore. Quand une règle ci-dessous dépend d'un outil absent, le signaler plutôt que l'ignorer en silence.
 
