@@ -14,7 +14,7 @@ Les maquettes UX/UI (PDF) seront ajoutées dans `docs/` au moment de travailler 
 
 ## État actuel vs cible
 
-Étape 0 (§13) réalisée localement : Laravel 12 + Breeze (Inertia 2 + Vue 3 **TypeScript**), `strict_types` partout (règle Pint + test d'architecture), PHP 8.4, Tailwind 3 via PostCSS, Pest 3, Larastan niveau 8, Rector, ESLint/Prettier, Vitest, Playwright + axe, `app/Domain/*` (dossiers vides), `lang/fr` (via `laravel-lang/common`), CI GitHub Actions, ADR 0001–0005 et 0008. Reste à valider : la CI n'a jamais tourné, faute de dépôt GitHub distant.
+Étape 0 (§13) terminée : Laravel 12 + Breeze (Inertia 2 + Vue 3 **TypeScript**), `strict_types` partout (règle Pint + test d'architecture), PHP 8.4, Tailwind 3 via PostCSS, Pest 3, Larastan niveau 8, Rector, ESLint/Prettier, Vitest, Playwright + axe, `app/Domain/*` (dossiers vides), `lang/fr` (via `laravel-lang/common`), CI GitHub Actions, ADR 0001–0005 et 0008. CI verte sur GitHub (dépôt public `ndiayejp/xylou`).
 
 **Pas encore en place** (arrive avec l'étape qui en a besoin, chaque dépendance justifiée) : spatie/laravel-data et typescript-transformer (donc pas de `generated.d.ts` ni de `typescript:transform`), spatie/laravel-permission, vue-i18n, Horizon, Reverb, Scout/Meilisearch, jetons Tailwind Xylou, `Components/ui`. Quand une règle ci-dessous dépend d'un outil absent, le signaler plutôt que l'ignorer en silence.
 
