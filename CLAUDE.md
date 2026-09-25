@@ -16,9 +16,11 @@ Les maquettes UX/UI (PDF) seront ajoutées dans `docs/` au moment de travailler 
 
 Le projet sort tout juste de l'installation : Laravel 12 + Breeze (Inertia 2 + Vue 3 en **JavaScript**), Tailwind 3 via PostCSS, Pest 3, Pint. Base de données : PostgreSQL 18 natif Windows (service `postgresql-x64-18`, port **5433**, base/utilisateur/mot de passe `xylou`) ; un PostgreSQL 17 sans rapport occupe le port 5432. Tests sur SQLite en mémoire (`phpunit.xml`) — éviter le SQL propre à Postgres dans ce que les tests exécutent, ou basculer les tests sur Postgres.
 
-L'étape 0 du plan (§13) reste à faire. **Pas encore en place** : TypeScript, `strict_types`, PHP ≥ 8.3 (`composer.json` accepte `^8.2`), Sail, Redis/Horizon, Reverb, Larastan, Rector, spatie/laravel-data et typescript-transformer, spatie/laravel-permission, vue-i18n, ESLint/Prettier, Vitest, Playwright + axe, `app/Domain/*`, CI GitHub Actions, `docs/adr/`. Les scripts `composer lint`, `composer analyse`, `npm run lint`, `npm run typecheck`, `npm run test`, `npm run test:e2e` n'existent pas encore. Quand une règle ci-dessous dépend d'un outil absent, le signaler plutôt que l'ignorer en silence.
+L'étape 0 du plan (§13) reste à faire. **Pas encore en place** : TypeScript, `strict_types`, PHP ≥ 8.3 (`composer.json` accepte `^8.2`), Sail, Redis/Horizon, Reverb, Larastan, Rector, spatie/laravel-data et typescript-transformer, spatie/laravel-permission, vue-i18n, dossier `lang/` (à publier via `php artisan lang:publish`), ESLint/Prettier, Vitest, Playwright + axe, `app/Domain/*`, CI GitHub Actions, `docs/adr/`. Les scripts `composer lint`, `composer analyse`, `npm run lint`, `npm run typecheck`, `npm run test`, `npm run test:e2e` n'existent pas encore. Quand une règle ci-dessous dépend d'un outil absent, le signaler plutôt que l'ignorer en silence.
 
 `@tailwindcss/vite` v4 figure dans `package.json` mais n'est pas branché dans `vite.config.js`.
+
+Environnement local : le PHP CLI est celui de XAMPP (`C:\xampp\php`, **8.2.12**) — passer à PHP ≥ 8.3 imposera de changer d'interpréteur, pas seulement `composer.json`. Sessions, cache et files d'attente utilisent le driver `database` (d'où `queue:listen` dans `composer dev`), les mails partent dans les logs (`MAIL_MAILER=log`). `.env.example` est encore en `APP_LOCALE=en` : à passer en `fr`.
 
 ## Stack cible
 
