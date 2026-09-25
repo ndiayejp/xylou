@@ -1,0 +1,15 @@
+bootstrap/ssr
+node_modules
+playwright-report
+public
+storage
+test-results
+vendor
+composer.lock
+package-lock.json
+resources/js/types/generated.d.ts
+*.php
+compose.yaml
+docs
+lang
+*.md
