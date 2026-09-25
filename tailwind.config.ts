@@ -19,7 +19,7 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
-        './resources/js/**/*.stories.ts',
+        './resources/js/**/*.ts',
     ],
 
     theme: {
