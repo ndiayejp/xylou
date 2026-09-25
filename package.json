@@ -12,18 +12,24 @@
         "typecheck": "vue-tsc --noEmit",
         "test": "vitest run",
         "test:watch": "vitest",
-        "test:e2e": "playwright test"
+        "test:e2e": "playwright test",
+        "storybook": "storybook dev -p 6006 --no-open",
+        "build-storybook": "storybook build -o storybook-static --quiet"
     },
     "devDependencies": {
         "@axe-core/playwright": "^4.13.0",
         "@inertiajs/vue3": "^2.0.0",
         "@playwright/test": "^1.63.0",
+        "@storybook/addon-a11y": "^10.6.0",
+        "@storybook/addon-docs": "^10.6.0",
+        "@storybook/vue3-vite": "^10.6.0",
         "@tailwindcss/forms": "^0.5.3",
         "@vitejs/plugin-vue": "^6.0.0",
         "@vue/eslint-config-prettier": "^10.2.0",
         "@vue/eslint-config-typescript": "^14.9.0",
         "@vue/test-utils": "^2.5.1",
         "autoprefixer": "^10.4.12",
+        "axe-core": "^4.13.0",
         "axios": "^1.11.0",
         "concurrently": "^9.0.1",
         "eslint": "^10.11.0",
@@ -32,6 +38,7 @@
         "laravel-vite-plugin": "^2.0.0",
         "postcss": "^8.4.31",
         "prettier": "^3.9.9",
+        "storybook": "^10.6.0",
         "tailwindcss": "^3.2.1",
         "typescript": "^5.6.3",
         "vite": "^7.0.7",
@@ -41,6 +48,7 @@
     },
     "dependencies": {
         "@fontsource-variable/nunito": "^5.3.0",
-        "@fontsource-variable/plus-jakarta-sans": "^5.3.0"
+        "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+        "@lucide/vue": "^1.48.0"
     }
 }

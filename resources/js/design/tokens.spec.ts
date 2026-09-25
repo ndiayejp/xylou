@@ -24,7 +24,7 @@ describe('jetons de couleur', () => {
         ['primary.strong', colors.primary.strong],
         ['success.text', colors.success.text],
         ['accent.text', colors.accent.text],
-        ['danger', colors.danger],
+        ['danger', colors.danger.DEFAULT],
     ])('%s est lisible (AA) sur le fond et sur blanc', (_, color) => {
         expect(contrast(color, colors.bg)).toBeGreaterThanOrEqual(AA);
         expect(contrast(color, colors.surface)).toBeGreaterThanOrEqual(AA);
@@ -33,7 +33,7 @@ describe('jetons de couleur', () => {
     it('le texte blanc est lisible sur les boutons pleins', () => {
         expect(contrast(colors.surface, colors.primary.DEFAULT)).toBeGreaterThanOrEqual(AA);
         expect(contrast(colors.surface, colors.primary.text)).toBeGreaterThanOrEqual(AA);
-        expect(contrast(colors.surface, colors.danger)).toBeGreaterThanOrEqual(AA);
+        expect(contrast(colors.surface, colors.danger.DEFAULT)).toBeGreaterThanOrEqual(AA);
     });
 
     it("l'accent n'est jamais un texte sur blanc, mais le texte principal l'est sur l'accent", () => {

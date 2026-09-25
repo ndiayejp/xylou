@@ -18,7 +18,14 @@ export const colors = {
         text: '#1C7A4C',
         soft: '#E6F7EE',
     },
-    danger: '#C23B3B',
+    danger: {
+        DEFAULT: '#C23B3B',
+        line: '#F2C4C4',
+    },
+    disabled: {
+        DEFAULT: '#E3E4EE',
+        text: '#6E7089',
+    },
     bg: '#F7F8FC',
     surface: '#FFFFFF',
     text: '#202238',
