@@ -1,3 +1,26 @@
+@import '@fontsource-variable/plus-jakarta-sans';
+@import '@fontsource-variable/nunito';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-bg text-text;
+    }
+
+    :focus-visible {
+        @apply rounded-tag outline outline-[3px] outline-offset-2 outline-accent;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation: none !important;
+            transition: none !important;
+            scroll-behavior: auto !important;
+        }
+    }
+}

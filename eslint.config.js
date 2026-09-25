@@ -10,6 +10,7 @@ export default defineConfigWithVueTs(
             'playwright-report',
             'public',
             'storage',
+            'storybook-static',
             'test-results',
             'vendor',
             'resources/js/types/generated.d.ts',
