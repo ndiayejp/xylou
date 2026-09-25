@@ -1,59 +1,79 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Xylou
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Plateforme d'accompagnement scolaire personnalisé par IA, avec trois espaces connectés : enfant, parent et professionnel.
 
-## About Laravel
+- Spécifications et plan de réalisation : [`docs/SPECIFICATIONS.md`](docs/SPECIFICATIONS.md)
+- Décisions d'architecture : [`docs/adr/`](docs/adr/)
+- Consignes pour Claude Code : [`CLAUDE.md`](CLAUDE.md)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Stack : Laravel 12 (PHP 8.4) · PostgreSQL 18 · Inertia 2 · Vue 3 + TypeScript · Tailwind · Pest · Larastan · Vitest · Playwright + axe.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Démarrage
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Deux modes, décrits dans l'[ADR 0008](docs/adr/0008-environnement-local-hybride.md).
 
-## Learning Laravel
+### Mode hybride (Windows) : PHP et PostgreSQL natifs
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Prérequis : PHP ≥ 8.3 dans le `PATH` (avec `pdo_pgsql`, `intl`, `zip`), Composer, Node 24, PostgreSQL ≥ 16, Docker Desktop.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+# 1. Base de données (une seule fois)
+psql -U postgres -p 5433 -c "CREATE USER xylou WITH PASSWORD 'xylou';"
+psql -U postgres -p 5433 -c "CREATE DATABASE xylou OWNER xylou;"
 
-## Laravel Sponsors
+# 2. Services Docker : Redis, Meilisearch, Mailpit
+composer services
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# 3. Dépendances, .env, clé, migrations, build
+composer setup
 
-### Premium Partners
+# 4. Serveur, file d'attente, logs et Vite
+composer dev
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+L'application tourne sur http://127.0.0.1:8000. Les e-mails (vérification d'adresse, mot de passe oublié) arrivent dans Mailpit : http://localhost:8025.
 
-## Contributing
+Le `.env.example` pointe sur PostgreSQL au port **5433** ; adapter `DB_PORT` si votre instance écoute ailleurs.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Mode Sail (Linux, macOS, WSL)
 
-## Code of Conduct
+Dans `.env`, remplacer les hôtes locaux par ceux des conteneurs : `DB_HOST=pgsql`, `DB_PORT=5432`, `REDIS_HOST=redis`, `MAIL_HOST=mailpit`. Puis :
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+./vendor/bin/sail up -d
+./vendor/bin/sail composer setup
+```
 
-## Security Vulnerabilities
+## Commandes
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Besoin | Commande |
+|---|---|
+| Tests PHP (architecture, unitaires, fonctionnels) | `composer test` |
+| Un test précis | `php artisan test --filter="profile page is displayed"` |
+| Formatage PHP (vérifier / corriger) | `composer lint` / `composer format` |
+| Analyse statique (Larastan niveau 8) | `composer analyse` |
+| Rector (vérifier / appliquer) | `composer refactor:check` / `composer refactor` |
+| Lint front (vérifier / corriger) | `npm run lint` / `npm run lint:fix` |
+| Formatage front (vérifier / corriger) | `npm run format:check` / `npm run format` |
+| Vérification des types | `npm run typecheck` |
+| Tests front (Vitest) | `npm run test` |
+| Tests E2E + accessibilité | `npm run test:e2e` |
 
-## License
+Les tests E2E démarrent `php artisan serve` si aucun serveur ne tourne. Ils demandent des assets construits (`npm run build`) et une base migrée. À la première utilisation, installer le navigateur avec `npx playwright install chromium`.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+La CI (`.github/workflows/ci.yml`) lance toutes ces vérifications à chaque pull request, avec les tests PHP sur PostgreSQL.
+
+## Organisation du code
+
+- `app/Domain/<Domaine>` : code métier (Actions, modèles, DTO, enums, événements), un dossier par domaine.
+- `app/Http` : contrôleurs minces, qui valident, autorisent, appellent une Action et répondent avec Inertia.
+- `resources/js/Pages` : une page Vue par écran.
+- `tests/Architecture` : règles vérifiées automatiquement (`strict_types`, pas de `dd`/`dump`, isolation des domaines).
+- `tests/Browser` : parcours Playwright avec contrôle axe.
+
+## Dépendances ajoutées hors spécification
+
+| Paquet | Pourquoi | Licence |
+|---|---|---|
+| `laravel-lang/common` (dev) | Fournit les traductions françaises de Laravel (`lang/fr`) sans les maintenir à la main. Paquet de référence, très utilisé et maintenu. | MIT |
+| `driftingly/rector-laravel` (dev) | Règles Rector propres à Laravel, pour les montées de version. Extension de référence pour Laravel, référencée dans la documentation de Rector. | MIT |
