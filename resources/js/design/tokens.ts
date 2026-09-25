@@ -30,9 +30,12 @@ export const colors = {
     surface: '#FFFFFF',
     text: '#202238',
     muted: '#5A5C75',
+    subtle: '#8A8CA3',
     line: '#E6E7F2',
     tint: '#EEEEFF',
     track: '#ECEDF5',
+    well: '#EEEFF6',
+    switch: '#CFD1E0',
 } as const;
 
 export const subjects = {
