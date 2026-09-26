@@ -21,6 +21,8 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     auth: {
         user: User;
     };
+    // Session enfant uniquement (null ailleurs) : seulement le prénom.
+    kid: { id: number; firstName: string } | null;
     // Espace parent uniquement (null ailleurs).
     parent: {
         children: ChildSummary[];

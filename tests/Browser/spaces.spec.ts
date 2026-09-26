@@ -68,3 +68,28 @@ test('un pro sans 2FA est guidé vers son activation, puis se déconnecte', asyn
 
     await expect(page).toHaveURL(/\/$/);
 });
+
+test('session enfant : l’enfant reste dans son espace, le code parent l’en fait sortir', async ({
+    page,
+}) => {
+    await login(page, 'parent@example.com');
+    await page.getByRole('button', { name: /^Ouvrir l’espace d/ }).click();
+
+    await expect(page).toHaveURL(/\/enfant$/);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(/^Bonjour (Emma|Lucas) !$/);
+    await expectNoSeriousViolations(page);
+
+    // L'enfant tente d'atteindre l'espace parent : il reste chez lui.
+    await page.goto('/parent');
+    await expect(page).toHaveURL(/\/enfant$/);
+
+    await page.getByRole('link', { name: 'Espace parent' }).click();
+    await expect(page).toHaveURL(/\/enfant\/sortie$/);
+    await page.getByLabel('Mot de passe').fill('mauvais');
+    await page.getByRole('button', { name: 'Revenir à l’espace parent' }).click();
+    await expect(page.getByText('Ce code ne correspond pas.')).toBeVisible();
+
+    await page.getByLabel('Mot de passe').fill('password');
+    await page.getByRole('button', { name: 'Revenir à l’espace parent' }).click();
+    await expect(page).toHaveURL(/\/parent$/);
+});

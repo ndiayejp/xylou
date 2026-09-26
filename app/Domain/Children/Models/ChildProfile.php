@@ -8,6 +8,8 @@ use App\Domain\Children\Enums\Grade;
 use App\Domain\Children\Policies\ChildProfilePolicy;
 use App\Domain\Identity\Models\User;
 use Database\Factories\ChildProfileFactory;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
@@ -26,10 +28,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 #[UseFactory(ChildProfileFactory::class)]
 #[UsePolicy(ChildProfilePolicy::class)]
-class ChildProfile extends Model
+class ChildProfile extends Model implements AuthenticatableContract
 {
+    // Garde « kid » : l'enfant n'a ni mot de passe ni jeton « se souvenir de moi ».
+    use Authenticatable;
+
     /** @use HasFactory<ChildProfileFactory> */
     use HasFactory, SoftDeletes;
+
+    public function getRememberTokenName(): string
+    {
+        return '';
+    }
 
     protected $fillable = ['first_name', 'birth_year', 'grade'];
 

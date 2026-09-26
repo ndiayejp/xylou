@@ -31,6 +31,12 @@ final class ChildProfilePolicy
         return $this->owns($user, $child);
     }
 
+    // Ouvrir l'espace de l'enfant sur l'appareil du parent (§7.2).
+    public function openKidSession(User $user, ChildProfile $child): bool
+    {
+        return $this->owns($user, $child);
+    }
+
     private function owns(User $user, ChildProfile $child): bool
     {
         return $user->hasRole(Role::Parent->value) && $child->isOwnedBy($user);

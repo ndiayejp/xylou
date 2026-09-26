@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Settings\ParentPinController;
 use App\Http\Controllers\Settings\SecurityController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\ConfirmedTwoFactorAuthenticationController;
@@ -68,6 +69,12 @@ Route::middleware(['auth', 'password.confirm'])->group(function (): void {
 
     Route::post('user/two-factor-recovery-codes', [RecoveryCodeController::class, 'store'])
         ->name('two-factor.regenerate-recovery-codes');
+
+    // Code parent pour sortir de la session enfant (§7.2).
+    Route::middleware('role:'.Role::Parent->value)->group(function (): void {
+        Route::put('settings/parent-pin', [ParentPinController::class, 'update'])->name('parent-pin.update');
+        Route::delete('settings/parent-pin', [ParentPinController::class, 'destroy'])->name('parent-pin.destroy');
+    });
 });
 
 Route::middleware('auth')->group(function (): void {

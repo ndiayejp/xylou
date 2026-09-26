@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -41,6 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
         'two_factor_secret',
         'two_factor_recovery_codes',
+        'parent_pin',
     ];
 
     /**
@@ -54,7 +56,19 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
+            'parent_pin' => 'hashed',
         ];
+    }
+
+    public function hasParentPin(): bool
+    {
+        return $this->parent_pin !== null;
+    }
+
+    // Code parent pour sortir de la session enfant (§7.2) : le PIN s'il existe, sinon le mot de passe.
+    public function checkParentCode(string $code): bool
+    {
+        return Hash::check($code, $this->parent_pin ?? $this->password);
     }
 
     // La 2FA est obligatoire pour les professionnels (§7.1), facultative pour les parents.

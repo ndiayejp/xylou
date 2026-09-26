@@ -9,6 +9,7 @@ import XCard from '@/Components/ui/XCard.vue';
 import XInput from '@/Components/ui/XInput.vue';
 import XTag from '@/Components/ui/XTag.vue';
 import AccountSpace from '@/Layouts/AccountSpace.vue';
+import ParentPinForm from './Partials/ParentPinForm.vue';
 
 const props = defineProps<{
     twoFactor: {
@@ -19,6 +20,7 @@ const props = defineProps<{
         setupKey: string | null;
         recoveryCodes: string[];
     };
+    parentPin: { enabled: boolean } | null;
     status?: string;
 }>();
 
@@ -154,6 +156,8 @@ const confirm = () =>
                     </div>
                 </div>
             </XCard>
+
+            <ParentPinForm v-if="parentPin" :enabled="parentPin.enabled" />
         </div>
     </AccountSpace>
 </template>

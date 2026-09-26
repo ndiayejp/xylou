@@ -66,3 +66,22 @@ describe('KidLayout', () => {
         expect(skip.text()).toBe('Aller au contenu');
     });
 });
+
+describe('KidLayout : retour à l’espace parent', () => {
+    it('affiche un lien « Espace parent » à 18 px quand exitHref est fourni', () => {
+        const wrapper = mount(KidLayout, {
+            props: { nav: kidNav, homeHref: '/enfant', exitHref: '/enfant/sortie' },
+        });
+        const link = wrapper.get('a[href="/enfant/sortie"]');
+
+        expect(link.text()).toBe('Espace parent');
+        expect(link.classes()).toContain('text-[18px]');
+        expect(link.get('svg').attributes('aria-hidden')).toBe('true');
+    });
+
+    it('sans exitHref, pas de lien', () => {
+        const wrapper = mount(KidLayout, { props: { nav: kidNav, homeHref: '/enfant' } });
+
+        expect(wrapper.find('a[href="/enfant/sortie"]').exists()).toBe(false);
+    });
+});

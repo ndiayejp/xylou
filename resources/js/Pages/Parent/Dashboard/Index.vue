@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { Head, usePage } from '@inertiajs/vue3';
-import { CalendarDays, Users } from '@lucide/vue';
+import { Head, router, usePage } from '@inertiajs/vue3';
+import { CalendarDays, DoorOpen, Users } from '@lucide/vue';
+import { ref } from 'vue';
+import XButton from '@/Components/ui/XButton.vue';
 import XCard from '@/Components/ui/XCard.vue';
 import XEmptyState from '@/Components/ui/XEmptyState.vue';
 import { useChildren } from '@/Composables/useChildren';
@@ -9,6 +11,19 @@ import ParentSpace from '@/Layouts/ParentSpace.vue';
 
 const firstName = usePage().props.auth.user.name.split(' ')[0];
 const { currentChild } = useChildren();
+
+// Ouvre la session enfant sur cet appareil ; la session parent se ferme.
+const opening = ref(false);
+function openKidSpace(childId: number): void {
+    router.post(
+        route('parent.children.kid-session', childId),
+        {},
+        {
+            onStart: () => (opening.value = true),
+            onFinish: () => (opening.value = false),
+        },
+    );
+}
 </script>
 
 <template>
@@ -30,6 +45,19 @@ const { currentChild } = useChildren();
                 }}
             </p>
         </template>
+
+        <div v-if="currentChild" class="mb-6">
+            <XButton :icon="DoorOpen" :loading="opening" @click="openKidSpace(currentChild.id)">
+                {{
+                    $t(
+                        elides(currentChild.firstName)
+                            ? 'parent.dashboard.openKidSpaceElided'
+                            : 'parent.dashboard.openKidSpace',
+                        { name: currentChild.firstName },
+                    )
+                }}
+            </XButton>
+        </div>
 
         <XCard padding="lg" class="flex min-h-[300px] items-center justify-center">
             <XEmptyState
