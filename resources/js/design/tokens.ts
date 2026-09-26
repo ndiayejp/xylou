@@ -107,3 +107,22 @@ export const minTouchTarget = {
     adult: '44px',
     kid: '64px',
 } as const;
+
+// Fonds d'avatar : texte blanc lisible (AA). Plus foncés que la maquette (#FF8A65, #2FA58B), trop clairs.
+export const avatar = {
+    coral: '#C4491F',
+    teal: '#1D7F6A',
+    blue: '#2468A8',
+    indigo: '#5B5CE2',
+    violet: '#7A3FB0',
+    pink: '#9C3470',
+} as const;
+
+export const reward = {
+    indigo: { text: '#4546C4', bg: '#EEEEFF' },
+    amber: { text: '#8A5300', bg: '#FFE9C4' },
+    red: { text: '#B23A26', bg: '#FDECE8' },
+    green: { text: '#1C7A4C', bg: '#E6F7EE' },
+    blue: { text: '#1F6AAF', bg: '#E4F0FB' },
+    pink: { text: '#9C3470', bg: '#FAE8F2' },
+} as const;

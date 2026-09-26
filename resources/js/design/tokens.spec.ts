@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { colors, fontSize, mastery, subjects } from './tokens';
+import { avatar, colors, fontSize, mastery, reward, subjects } from './tokens';
 
 function luminance(hex: string): number {
     const [r, g, b] = [1, 3, 5].map((i) => {
@@ -55,6 +55,17 @@ describe('jetons de couleur', () => {
 
     it.each(Object.entries(mastery))(
         'le niveau %s est lisible sur sa pastille',
+        (_, { text, bg }) => {
+            expect(contrast(text, bg)).toBeGreaterThanOrEqual(AA);
+        },
+    );
+
+    it.each(Object.entries(avatar))("l'initiale blanche est lisible sur l'avatar %s", (_, bg) => {
+        expect(contrast(colors.surface, bg)).toBeGreaterThanOrEqual(AA);
+    });
+
+    it.each(Object.entries(reward))(
+        'la récompense %s est lisible sur son fond',
         (_, { text, bg }) => {
             expect(contrast(text, bg)).toBeGreaterThanOrEqual(AA);
         },

@@ -3,6 +3,7 @@ import type { Config } from 'tailwindcss';
 import defaultTheme from 'tailwindcss/defaultTheme';
 import {
     borderRadius,
+    avatar,
     boxShadow,
     colors,
     fontFamily,
@@ -10,6 +11,7 @@ import {
     mastery,
     minTouchTarget,
     motion,
+    reward,
     subjects,
 } from './resources/js/design/tokens';
 
@@ -24,7 +26,7 @@ export default {
 
     theme: {
         extend: {
-            colors: { ...colors, subject: subjects, mastery },
+            colors: { ...colors, subject: subjects, mastery, avatar, reward },
             fontFamily: {
                 sans: [fontFamily.sans, ...defaultTheme.fontFamily.sans],
                 kid: [fontFamily.kid, ...defaultTheme.fontFamily.sans],
