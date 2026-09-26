@@ -9,6 +9,7 @@ import AccountMenu from './partials/AccountMenu.vue';
 import NotificationsLink from './partials/NotificationsLink.vue';
 import SideNav from './partials/SideNav.vue';
 import SkipLink from './partials/SkipLink.vue';
+import NavigationProgress from './partials/NavigationProgress.vue';
 import ToastRegion from './partials/ToastRegion.vue';
 
 // Espace professionnel, sobre : barre latérale sur grand écran, menu déroulant en dessous.
@@ -154,5 +155,6 @@ const menuId = useId();
         </div>
 
         <ToastRegion />
+        <NavigationProgress />
     </div>
 </template>

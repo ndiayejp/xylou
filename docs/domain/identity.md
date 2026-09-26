@@ -7,6 +7,8 @@ Comptes adultes, rôles et espaces. L'enfant n'a pas de compte : il utilise une 
 - Un compte a un rôle : `parent`, `professional` ou `admin` (Enum `Role`, stocké par spatie/laravel-permission, ADR 0011).
 - L'inscription publique crée toujours un **parent** (`RegisterParent`). Un professionnel ne s'inscrit que sur invitation d'un parent (étape 9).
 - Chaque rôle n'accède qu'à son espace : `/parent` (`parent.*`), `/pro` (`pro.*`). Toute autre combinaison renvoie 403 ; un visiteur est renvoyé vers la connexion ; une adresse non vérifiée vers la vérification.
+- Mot de passe : 12 caractères minimum ; en production, refus des mots de passe présents dans des fuites connues (`Password::defaults`, `AppServiceProvider`).
+- Connexion limitée à 5 échecs par couple e-mail + IP (`LoginRequest`), message en français.
 - Après connexion, `dashboard` redirige vers l'espace du compte (`User::homeRouteName()`). Un admin n'a pas encore d'espace (403).
 
 ## Actions

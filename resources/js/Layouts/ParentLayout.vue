@@ -11,6 +11,7 @@ import ChildMenu from './partials/ChildMenu.vue';
 import NotificationsLink from './partials/NotificationsLink.vue';
 import SideNav from './partials/SideNav.vue';
 import SkipLink from './partials/SkipLink.vue';
+import NavigationProgress from './partials/NavigationProgress.vue';
 import ToastRegion from './partials/ToastRegion.vue';
 
 // Bureau : barre latérale. Tablette : rail. Mobile : en-tête + barre en bas (4 liens + « Plus »).
@@ -234,5 +235,6 @@ const moreId = useId();
         </nav>
 
         <ToastRegion />
+        <NavigationProgress />
     </div>
 </template>

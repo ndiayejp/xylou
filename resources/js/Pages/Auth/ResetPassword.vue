@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
+import { Lock, Mail } from '@lucide/vue';
+import XButton from '@/Components/ui/XButton.vue';
+import XInput from '@/Components/ui/XInput.vue';
+import AuthLayout from '@/Layouts/AuthLayout.vue';
 
 const props = defineProps<{
     email: string;
@@ -20,72 +19,46 @@ const form = useForm({
 
 const submit = () => {
     form.post(route('password.store'), {
-        onFinish: () => {
-            form.reset('password', 'password_confirmation');
-        },
+        onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Reset Password" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput
-                    id="password_confirmation"
-                    v-model="form.password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Reset Password
-                </PrimaryButton>
-            </div>
+    <AuthLayout :title="$t('auth.reset.title')" :description="$t('auth.reset.description')">
+        <form class="flex flex-col gap-5" novalidate @submit.prevent="submit">
+            <XInput
+                v-model="form.email"
+                type="email"
+                :label="$t('auth.fields.email')"
+                :icon="Mail"
+                :error="form.errors.email"
+                required
+                autocomplete="username"
+            />
+            <XInput
+                v-model="form.password"
+                type="password"
+                :label="$t('auth.fields.newPassword')"
+                :icon="Lock"
+                :hint="$t('auth.fields.passwordHint')"
+                :error="form.errors.password"
+                required
+                autofocus
+                autocomplete="new-password"
+            />
+            <XInput
+                v-model="form.password_confirmation"
+                type="password"
+                :label="$t('auth.fields.passwordConfirmation')"
+                :icon="Lock"
+                :error="form.errors.password_confirmation"
+                required
+                autocomplete="new-password"
+            />
+            <XButton type="submit" size="lg" block :loading="form.processing">
+                {{ $t('auth.reset.submit') }}
+            </XButton>
         </form>
-    </GuestLayout>
+    </AuthLayout>
 </template>

@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Link, useForm } from '@inertiajs/vue3';
+import { Lock, Mail } from '@lucide/vue';
+import XButton from '@/Components/ui/XButton.vue';
+import XInput from '@/Components/ui/XInput.vue';
+import XToggle from '@/Components/ui/XToggle.vue';
+import AuthLayout from '@/Layouts/AuthLayout.vue';
 
 defineProps<{
     canResetPassword?: boolean;
@@ -20,77 +19,55 @@ const form = useForm({
 
 const submit = () => {
     form.post(route('login'), {
-        onFinish: () => {
-            form.reset('password');
-        },
+        onFinish: () => form.reset('password'),
     });
 };
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Log in" />
-
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
-            {{ status }}
-        </div>
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="current-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4 block">
-                <label class="flex items-center">
-                    <Checkbox v-model:checked="form.remember" name="remember" />
-                    <span class="ms-2 text-sm text-gray-600">Remember me</span>
-                </label>
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
+    <AuthLayout
+        :title="$t('auth.login.title')"
+        :description="$t('auth.login.description')"
+        :status="status"
+    >
+        <form class="flex flex-col gap-5" novalidate @submit.prevent="submit">
+            <XInput
+                v-model="form.email"
+                type="email"
+                :label="$t('auth.fields.email')"
+                :icon="Mail"
+                :error="form.errors.email"
+                required
+                autofocus
+                autocomplete="username"
+            />
+            <XInput
+                v-model="form.password"
+                type="password"
+                :label="$t('auth.fields.password')"
+                :icon="Lock"
+                :error="form.errors.password"
+                required
+                autocomplete="current-password"
+            />
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <XToggle v-model="form.remember" :label="$t('auth.fields.remember')" />
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    class="link text-[14px]"
                 >
-                    Forgot your password?
+                    {{ $t('auth.login.forgot') }}
                 </Link>
-
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Log in
-                </PrimaryButton>
             </div>
+            <XButton type="submit" size="lg" block :loading="form.processing">
+                {{ $t('auth.login.submit') }}
+            </XButton>
         </form>
-    </GuestLayout>
+
+        <template #footer>
+            {{ $t('auth.login.noAccount') }}
+            <Link :href="route('register')" class="link">{{ $t('auth.login.register') }}</Link>
+        </template>
+    </AuthLayout>
 </template>
