@@ -9,46 +9,6 @@ use App\Domain\Children\Models\Onboarding;
 use App\Domain\Identity\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
-// Parent tout juste inscrit (adresse non vérifiée) avec un onboarding à l'écran 2.
-function freshParent(): array
-{
-    $parent = User::factory()->parent()->unverified()->create();
-    test()->actingAs($parent)->post(route('onboarding.start'));
-
-    return [$parent, Onboarding::query()->where('parent_id', $parent->id)->sole()];
-}
-
-function childData(array $overrides = []): array
-{
-    return [
-        'first_name' => 'Lucas',
-        'age' => 11,
-        'grade' => '6e',
-        'language' => 'fr',
-        'avatar' => 'ball',
-        'read_aloud' => true,
-        'dyslexia_font' => false,
-        'no_timer' => true,
-        ...$overrides,
-    ];
-}
-
-// Valide les écrans 2 à $upTo par leurs vraies routes, avec des réponses valides.
-function walkOnboarding(Onboarding $onboarding, int $upTo): void
-{
-    $steps = [
-        2 => fn () => test()->put(route('onboarding.child.update', $onboarding), childData()),
-        3 => fn () => test()->put(route('onboarding.interests.update', $onboarding), ['interests' => ['football'], 'custom' => []]),
-        4 => fn () => test()->put(route('onboarding.goals.update', $onboarding), ['goals' => ['regain_confidence'], 'primary' => 'regain_confidence']),
-        5 => fn () => test()->put(route('onboarding.difficulties.update', $onboarding), ['difficulties' => []]),
-        6 => fn () => test()->put(route('onboarding.preferences.update', $onboarding), ['session_minutes' => 10]),
-    ];
-
-    foreach (range(2, $upTo) as $step) {
-        ($steps[$step] ?? fn () => test()->post(route('onboarding.step.next', [$onboarding, $step])))();
-    }
-}
-
 describe('écran 2 : profil de l’enfant', function (): void {
     test('un parent non vérifié peut décrire son enfant', function (): void {
         [, $onboarding] = freshParent();
@@ -126,7 +86,7 @@ describe('progression et reprise', function (): void {
         [$parent, $onboarding] = freshParent();
 
         walkOnboarding($onboarding, 6);
-        $this->post(route('onboarding.step.next', [$onboarding, 7]))->assertRedirect(route('dashboard'));
+        $this->put(route('onboarding.summary.update', $onboarding))->assertRedirect(route('dashboard'));
 
         expect($onboarding->fresh()?->isCompleted())->toBeTrue();
         $this->get(route('dashboard'))->assertRedirect(route('verification.notice'));

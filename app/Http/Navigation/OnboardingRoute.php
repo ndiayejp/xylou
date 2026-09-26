@@ -6,8 +6,7 @@ namespace App\Http\Navigation;
 
 use App\Domain\Children\Models\Onboarding;
 
-// Adresse de chaque écran de l'onboarding (2 à 7). Les écrans pas encore construits passent par
-// la route générique « onboarding.step » (écran d'attente).
+// Adresse de chaque écran de l'onboarding (2 à 7).
 final class OnboardingRoute
 {
     /** @var array<int, string> */
@@ -17,15 +16,14 @@ final class OnboardingRoute
         4 => 'onboarding.goals',
         5 => 'onboarding.difficulties',
         6 => 'onboarding.preferences',
+        7 => 'onboarding.summary',
     ];
 
     public static function for(Onboarding $onboarding, int $step): string
     {
-        $step = max($step, Onboarding::FIRST_STEP);
+        $step = min(max($step, Onboarding::FIRST_STEP), Onboarding::LAST_STEP);
 
-        return isset(self::ROUTES[$step])
-            ? route(self::ROUTES[$step], $onboarding)
-            : route('onboarding.step', [$onboarding, $step]);
+        return route(self::ROUTES[$step], $onboarding);
     }
 
     public static function resume(Onboarding $onboarding): string
@@ -33,9 +31,10 @@ final class OnboardingRoute
         return self::for($onboarding, $onboarding->reached_step);
     }
 
-    // L'écran a-t-il sa propre route ? (sinon, écran d'attente générique)
-    public static function isDedicated(int $step): bool
+    // Après l'enregistrement d'un écran : le suivant, ou le résumé si le parent l'a déjà atteint
+    // (il y revient après avoir corrigé une section).
+    public static function after(Onboarding $onboarding, int $step): string
     {
-        return isset(self::ROUTES[$step]);
+        return self::for($onboarding, $onboarding->reached_step >= Onboarding::LAST_STEP ? Onboarding::LAST_STEP : $step + 1);
     }
 }

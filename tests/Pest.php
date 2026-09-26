@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Domain\Children\Models\Onboarding;
+use App\Domain\Identity\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -44,7 +46,43 @@ expect()->extend('toBeOne', fn () => $this->toBe(1));
 |
 */
 
-function something(): void
+// Parent tout juste inscrit (adresse non vérifiée) avec un onboarding à l'écran 2.
+function freshParent(): array
 {
-    // ..
+    $parent = User::factory()->parent()->unverified()->create();
+    test()->actingAs($parent)->post(route('onboarding.start'));
+
+    return [$parent, Onboarding::query()->where('parent_id', $parent->id)->sole()];
+}
+
+function childData(array $overrides = []): array
+{
+    return [
+        'first_name' => 'Lucas',
+        'age' => 11,
+        'grade' => '6e',
+        'language' => 'fr',
+        'avatar' => 'ball',
+        'read_aloud' => true,
+        'dyslexia_font' => false,
+        'no_timer' => true,
+        ...$overrides,
+    ];
+}
+
+// Valide les écrans 2 à $upTo par leurs vraies routes, avec des réponses valides.
+function walkOnboarding(Onboarding $onboarding, int $upTo): void
+{
+    $steps = [
+        2 => fn () => test()->put(route('onboarding.child.update', $onboarding), childData()),
+        3 => fn () => test()->put(route('onboarding.interests.update', $onboarding), ['interests' => ['football'], 'custom' => []]),
+        4 => fn () => test()->put(route('onboarding.goals.update', $onboarding), ['goals' => ['regain_confidence'], 'primary' => 'regain_confidence']),
+        5 => fn () => test()->put(route('onboarding.difficulties.update', $onboarding), ['difficulties' => []]),
+        6 => fn () => test()->put(route('onboarding.preferences.update', $onboarding), ['session_minutes' => 10]),
+        7 => fn () => test()->put(route('onboarding.summary.update', $onboarding), ['add_child' => false]),
+    ];
+
+    foreach (range(2, $upTo) as $step) {
+        $steps[$step]();
+    }
 }

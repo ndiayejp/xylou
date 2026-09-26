@@ -11,6 +11,7 @@ async function expectNoSeriousViolations(page: Page): Promise<void> {
 test('onboarding : compte, profil de l’enfant, retour sans perte, jusqu’à la fin', async ({
     page,
 }) => {
+    test.setTimeout(60_000); // parcours complet, sept écrans
     await page.goto('/register');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Créons votre espace parent');
     await expect(page.getByRole('progressbar')).toHaveAttribute('aria-valuetext', 'Étape 1 sur 7');
@@ -120,8 +121,20 @@ test('onboarding : compte, profil de l’enfant, retour sans perte, jusqu’à l
     await expectNoSeriousViolations(page);
     await page.getByRole('button', { name: 'Voir le résumé' }).click();
 
-    await expect(page.getByRole('progressbar')).toHaveAttribute('aria-valuetext', 'Étape 7 sur 7');
+    // Écran 7 : résumé ; corriger une section y ramène.
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Tout est prêt');
+    await expect(page.getByRole('heading', { level: 2 })).toHaveText('L’univers de Lucas');
+    await expect(page.getByText('Fractions')).toBeVisible();
+    await expect(page.getByText('Visuel')).toBeVisible();
+    await expectNoSeriousViolations(page);
+
+    await page.getByRole('link', { name: 'Modifier : Passions' }).click();
+    await page.getByRole('button', { name: 'LEGO' }).click();
     await page.getByRole('button', { name: 'Continuer' }).click();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Tout est prêt');
+    await expect(page.getByText('LEGO')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Découvrir mon espace' }).click();
 
     // Fin : l'espace parent exige l'adresse vérifiée.
     await expect(page).toHaveURL(/\/verify-email$/);

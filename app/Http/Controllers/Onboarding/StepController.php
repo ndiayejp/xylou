@@ -10,30 +10,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Navigation\OnboardingRoute;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
-use Inertia\Inertia;
-use Inertia\Response;
 
-// Écran pas encore construit (7). Provisoire : un écran d'attente, remplacé dans les PR suivantes.
+// Adresse générique d'un écran : renvoie vers sa page, ou passe l'écran sans rien enregistrer
+// (« Je ne sais pas encore » à l'écran 5).
 final class StepController extends Controller
 {
-    public function show(Onboarding $onboarding, int $step): Response|RedirectResponse
+    public function show(Onboarding $onboarding, int $step): RedirectResponse
     {
         Gate::authorize('update', $onboarding);
 
-        if (! $onboarding->allows($step)) {
-            return redirect(OnboardingRoute::resume($onboarding));
-        }
-
-        // Un écran qui a désormais sa propre page n'est plus servi par l'écran d'attente.
-        if (OnboardingRoute::isDedicated($step)) {
-            return redirect(OnboardingRoute::for($onboarding, $step));
-        }
-
-        return Inertia::render('Onboarding/Pending', [
-            'onboarding' => ['id' => $onboarding->id, 'reachedStep' => $onboarding->reached_step],
-            'step' => $step,
-            'childName' => $onboarding->child?->first_name,
-        ]);
+        return redirect($onboarding->allows($step)
+            ? OnboardingRoute::for($onboarding, $step)
+            : OnboardingRoute::resume($onboarding));
     }
 
     public function store(Onboarding $onboarding, int $step, AdvanceOnboarding $advance): RedirectResponse
@@ -48,6 +36,6 @@ final class StepController extends Controller
 
         return $onboarding->isCompleted()
             ? to_route('dashboard')
-            : redirect(OnboardingRoute::for($onboarding, $step + 1));
+            : redirect(OnboardingRoute::after($onboarding, $step));
     }
 }
