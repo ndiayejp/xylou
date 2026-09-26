@@ -41,9 +41,19 @@ describe('jetons de couleur', () => {
         expect(contrast(colors.text, colors.accent.DEFAULT)).toBeGreaterThanOrEqual(AA);
     });
 
-    it('les fonds doux (ambre, indigo) gardent un texte lisible', () => {
-        expect(contrast(colors.accent.text, colors.accent.soft)).toBeGreaterThanOrEqual(AA);
-        expect(contrast(colors.primary.strong, colors.tint)).toBeGreaterThanOrEqual(AA);
+    it.each([
+        ['ambre', colors.accent.text, colors.accent.soft],
+        ['indigo', colors.primary.strong, colors.tint],
+        ['vert', colors.success.text, colors.success.soft],
+        ['rouge', colors.danger.DEFAULT, colors.danger.soft],
+        ['bleu', colors.info.text, colors.info.soft],
+    ])('le fond doux %s garde un texte lisible', (_, text, bg) => {
+        expect(contrast(text, bg)).toBeGreaterThanOrEqual(AA);
+    });
+
+    it('le toast sombre garde un texte et une action lisibles', () => {
+        expect(contrast(colors.surface, colors.text)).toBeGreaterThanOrEqual(AA);
+        expect(contrast(colors.accent.DEFAULT, colors.text)).toBeGreaterThanOrEqual(AA);
     });
 
     it.each(Object.entries(subjects))(

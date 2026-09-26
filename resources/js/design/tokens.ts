@@ -21,6 +21,11 @@ export const colors = {
     danger: {
         DEFAULT: '#C23B3B',
         line: '#F2C4C4',
+        soft: '#FDECEC',
+    },
+    info: {
+        text: '#1F6AAF',
+        soft: '#E4F0FB',
     },
     disabled: {
         DEFAULT: '#E3E4EE',
