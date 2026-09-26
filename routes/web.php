@@ -27,7 +27,7 @@ Route::middleware(['auth', 'verified', 'role:'.Role::Parent->value])
         Route::get('/', ParentDashboardController::class)->name('dashboard');
     });
 
-Route::middleware(['auth', 'verified', 'role:'.Role::Professional->value])
+Route::middleware(['auth', 'verified', 'role:'.Role::Professional->value, 'two-factor.required'])
     ->prefix('pro')
     ->name('pro.')
     ->group(function (): void {

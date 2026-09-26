@@ -11,7 +11,7 @@ function userWithRole(?Role $role): User
 {
     return match ($role) {
         Role::Parent => User::factory()->parent()->create(),
-        Role::Professional => User::factory()->professional()->create(),
+        Role::Professional => User::factory()->professional()->withTwoFactor()->create(),
         Role::Admin => User::factory()->admin()->create(),
         null => User::factory()->create(),
     };
@@ -73,7 +73,7 @@ test('les pages reçoivent les rôles de l’utilisateur', function (): void {
 });
 
 test('l’espace pro rend son tableau de bord', function (): void {
-    $this->actingAs(User::factory()->professional()->create())
+    $this->actingAs(User::factory()->professional()->withTwoFactor()->create())
         ->get(route('pro.dashboard'))
         ->assertInertia(fn (Assert $page): Assert => $page->component('Pro/Dashboard/Index'));
 });

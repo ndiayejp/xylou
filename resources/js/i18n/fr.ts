@@ -22,6 +22,7 @@ export default {
         notificationsRegion: 'Messages',
         accountMenu: 'Mon compte',
         profile: 'Mon profil',
+        security: 'Sécurité',
         logout: 'Se déconnecter',
     },
     parent: {
@@ -40,6 +41,36 @@ export default {
     },
     profile: {
         title: 'Mon profil',
+    },
+    security: {
+        title: 'Sécurité',
+        twoFactor: {
+            title: 'Vérification en deux étapes',
+            description:
+                'À chaque connexion, un code à 6 chiffres vous sera demandé en plus du mot de passe. Il est généré par une application d’authentification (Google Authenticator, Microsoft Authenticator, 1Password…).',
+            enabled: 'Activée',
+            disabled: 'Désactivée',
+            required:
+                'Obligatoire pour les professionnels : activez-la pour accéder à votre espace.',
+            enable: 'Activer',
+            disable: 'Désactiver',
+            cancel: 'Annuler',
+            scan: '1. Scannez ce QR code avec votre application d’authentification.',
+            qrAlt: 'QR code de configuration de la vérification en deux étapes',
+            setupKey: 'Ou saisissez cette clé :',
+            confirmStep: '2. Saisissez le code affiché pour confirmer.',
+            code: 'Code à 6 chiffres',
+            confirm: 'Confirmer',
+            recoveryTitle: 'Codes de secours',
+            recoveryDescription:
+                'Gardez-les en lieu sûr : chacun permet une connexion si vous n’avez plus accès à votre téléphone.',
+            regenerate: 'Générer de nouveaux codes',
+        },
+        status: {
+            'two-factor-authentication-confirmed': 'La vérification en deux étapes est activée.',
+            'two-factor-authentication-disabled': 'La vérification en deux étapes est désactivée.',
+            'recovery-codes-generated': 'De nouveaux codes de secours ont été générés.',
+        },
     },
     auth: {
         fields: {
@@ -87,6 +118,18 @@ export default {
             resend: 'Renvoyer le lien',
             linkSent: 'Un nouveau lien vient de partir vers votre adresse e-mail.',
             logout: 'Se déconnecter',
+        },
+        twoFactor: {
+            title: 'Vérification en deux étapes',
+            description:
+                'Saisissez le code à 6 chiffres affiché par votre application d’authentification.',
+            recoveryDescription:
+                'Saisissez l’un de vos codes de secours. Chaque code ne sert qu’une fois.',
+            code: 'Code de vérification',
+            recoveryCode: 'Code de secours',
+            submit: 'Vérifier',
+            useRecovery: 'Utiliser un code de secours',
+            useCode: 'Utiliser l’application d’authentification',
         },
         confirm: {
             title: 'Confirmez votre mot de passe',
