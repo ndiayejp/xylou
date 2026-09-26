@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
-// Écrans 3 à 7. Provisoire : un écran d'attente, remplacé écran par écran dans les PR suivantes.
+// Écrans pas encore construits (5 à 7). Provisoire : un écran d'attente, remplacé dans les PR suivantes.
 final class StepController extends Controller
 {
     public function show(Onboarding $onboarding, int $step): Response|RedirectResponse
@@ -22,6 +22,11 @@ final class StepController extends Controller
 
         if (! $onboarding->allows($step)) {
             return redirect(OnboardingRoute::resume($onboarding));
+        }
+
+        // Un écran qui a désormais sa propre page n'est plus servi par l'écran d'attente.
+        if (OnboardingRoute::isDedicated($step)) {
+            return redirect(OnboardingRoute::for($onboarding, $step));
         }
 
         return Inertia::render('Onboarding/Pending', [
