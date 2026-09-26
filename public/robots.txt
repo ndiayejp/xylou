@@ -1,2 +1,7 @@
 User-agent: *
-Disallow:
+Disallow: /parent
+Disallow: /pro
+Disallow: /enfant
+Disallow: /settings
+Disallow: /profile
+Disallow: /dashboard

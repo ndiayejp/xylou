@@ -11,16 +11,23 @@ use App\Http\Controllers\Parent\DashboardController as ParentDashboardController
 use App\Http\Controllers\Parent\KidSessionController;
 use App\Http\Controllers\Pro\DashboardController as ProDashboardController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\Public\HomeController as PublicHomeController;
+use App\Http\Controllers\Public\LegalController;
+use App\Http\Controllers\Public\SitemapController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', fn () => Inertia::render('Welcome', [
-    'canLogin' => Route::has('login'),
-    'canRegister' => Route::has('register'),
-    'laravelVersion' => Application::VERSION,
-    'phpVersion' => PHP_VERSION,
-]));
+// Pages publiques
+Route::get('/', PublicHomeController::class)->name('home');
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+
+foreach ([
+    'notice' => '/mentions-legales',
+    'privacy' => '/confidentialite',
+    'terms' => '/conditions-utilisation',
+    'accessibility' => '/accessibilite',
+] as $page => $uri) {
+    Route::get($uri, LegalController::class)->defaults('page', $page)->name('legal.'.$page);
+}
 
 Route::get('/dashboard', HomeController::class)->middleware(['auth', 'verified'])->name('dashboard');
 

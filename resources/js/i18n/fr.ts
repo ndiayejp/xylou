@@ -1,5 +1,10 @@
 // Messages de l'interface (vue-i18n). Les messages du serveur restent dans lang/fr.
+import landing from './fr/landing';
+import legal from './fr/legal';
+
 export default {
+    landing,
+    legal,
     layout: {
         skipToContent: 'Aller au contenu',
         mainNav: 'Navigation principale',
@@ -226,6 +231,7 @@ export default {
             contact: 'Contact',
             helpCenter: 'Centre d’aide',
             legal: 'Mentions légales',
+            terms: 'Conditions d’utilisation',
         },
     },
 };
