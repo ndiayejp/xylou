@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Domain\Identity\Enums\Role;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Parent\DashboardController as ParentDashboardController;
+use App\Http\Controllers\Pro\DashboardController as ProDashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -14,7 +18,21 @@ Route::get('/', fn () => Inertia::render('Welcome', [
     'phpVersion' => PHP_VERSION,
 ]));
 
-Route::get('/dashboard', fn () => Inertia::render('Dashboard'))->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', HomeController::class)->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth', 'verified', 'role:'.Role::Parent->value])
+    ->prefix('parent')
+    ->name('parent.')
+    ->group(function (): void {
+        Route::get('/', ParentDashboardController::class)->name('dashboard');
+    });
+
+Route::middleware(['auth', 'verified', 'role:'.Role::Professional->value])
+    ->prefix('pro')
+    ->name('pro.')
+    ->group(function (): void {
+        Route::get('/', ProDashboardController::class)->name('dashboard');
+    });
 
 Route::middleware('auth')->group(function (): void {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -20,6 +20,26 @@ export default {
         tagline: 'L’accompagnement scolaire qui s’adapte à l’univers de chaque enfant.',
         copyright: '© {year} Xylou',
         notificationsRegion: 'Messages',
+        accountMenu: 'Mon compte',
+        profile: 'Mon profil',
+        logout: 'Se déconnecter',
+    },
+    parent: {
+        dashboard: {
+            title: 'Bonjour {name}',
+            emptyTitle: 'Ajoutez votre premier enfant',
+            emptyText: 'Son espace, ses activités et sa progression apparaîtront ici.',
+        },
+    },
+    pro: {
+        dashboard: {
+            title: 'Bonjour {name}',
+            emptyTitle: 'Aucun profil partagé pour l’instant',
+            emptyText: 'Quand un parent vous invitera, le profil de son enfant apparaîtra ici.',
+        },
+    },
+    profile: {
+        title: 'Mon profil',
     },
     nav: {
         kid: {
