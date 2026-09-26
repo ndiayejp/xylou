@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Children\Actions;
 
 use App\Domain\Children\Models\ChildProfile;
-use App\Domain\Children\Models\Interest;
+use App\Domain\Curriculum\Models\Interest;
 use Illuminate\Support\Facades\DB;
 
 // Remplace les passions de l'enfant : celles du référentiel (dans l'ordre choisi) et les passions libres.

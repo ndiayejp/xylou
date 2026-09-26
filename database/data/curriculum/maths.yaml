@@ -1,0 +1,302 @@
+# Référentiel de mathématiques, du CP à la 3e — version 1.
+# Rédigé d'après les programmes officiels des cycles 2, 3 et 4 : À VALIDER PAR L'ÉQUIPE PÉDAGOGIQUE.
+#
+# Un domaine regroupe des compétences ; chaque compétence a un code stable (MATIÈRE.NIVEAU.DOMAINE.CLÉ),
+# un libellé et ses niveaux (« ce2 » ou « ce1-ce2 »). Ne jamais réutiliser un code pour une autre
+# compétence : retirée du fichier, une compétence reste en base, marquée retirée.
+# Après modification : php artisan curriculum:sync
+
+subject:
+  key: maths
+  color: maths
+  icon: calculator
+  position: 1
+
+domains:
+  - code: MATH.NUM
+    label: 'Nombres et calculs'
+    skills:
+      - code: MATH.CP.NUM.COUNT
+        grades: cp
+        label: 'Dénombrer une collection jusqu’à 100'
+      - code: MATH.CP.NUM.READ
+        grades: cp
+        label: 'Lire, écrire et comparer les nombres jusqu’à 100'
+      - code: MATH.CP.NUM.TENS
+        grades: cp
+        label: 'Décomposer un nombre en dizaines et unités'
+      - code: MATH.CP.NUM.ADD
+        grades: cp
+        label: 'Additionner et soustraire des nombres jusqu’à 100'
+      - code: MATH.CP.NUM.FACTS
+        grades: cp
+        label: 'Mémoriser les compléments à 10 et les doubles'
+      - code: MATH.CE1.NUM.READ
+        grades: ce1
+        label: 'Lire, écrire et comparer les nombres jusqu’à 1 000'
+      - code: MATH.CE1.NUM.PLACE
+        grades: ce1
+        label: 'Comprendre la valeur des chiffres (centaines, dizaines, unités)'
+      - code: MATH.CE1.NUM.COLUMN
+        grades: ce1
+        label: 'Poser et calculer une addition et une soustraction'
+      - code: MATH.CE1.NUM.TABLES
+        grades: ce1
+        label: 'Mémoriser les tables de multiplication de 2, 3, 4 et 5'
+      - code: MATH.CE1.NUM.MENTAL
+        grades: ce1
+        label: 'Calculer mentalement des sommes et des différences'
+      - code: MATH.CE2.NUM.READ
+        grades: ce2
+        label: 'Lire, écrire et comparer les nombres jusqu’à 10 000'
+      - code: MATH.CE2.NUM.TABLES
+        grades: ce2
+        label: 'Mémoriser toutes les tables de multiplication'
+      - code: MATH.CE2.NUM.MULT
+        grades: ce2
+        label: 'Poser et calculer une multiplication'
+      - code: MATH.CE2.NUM.SHARE
+        grades: ce2
+        label: 'Partager en parts égales (sens de la division)'
+      - code: MATH.CE2.NUM.MENTAL
+        grades: ce2
+        label: 'Multiplier mentalement par 10 et par 100'
+      - code: MATH.CM1.NUM.LARGE
+        grades: cm1
+        label: 'Lire, écrire et comparer les grands nombres'
+      - code: MATH.CM1.NUM.FRAC
+        grades: cm1
+        label: 'Comprendre et utiliser des fractions simples'
+      - code: MATH.CM1.NUM.DEC
+        grades: cm1
+        label: 'Lire, écrire et comparer des nombres décimaux'
+      - code: MATH.CM1.NUM.DIV
+        grades: cm1
+        label: 'Calculer une division euclidienne'
+      - code: MATH.CM1.NUM.MENTAL
+        grades: cm1
+        label: 'Calculer mentalement avec les quatre opérations'
+      - code: MATH.CM2.NUM.FRACDEC
+        grades: cm2
+        label: 'Relier fractions décimales et nombres décimaux'
+      - code: MATH.CM2.NUM.DECADD
+        grades: cm2
+        label: 'Additionner et soustraire des nombres décimaux'
+      - code: MATH.CM2.NUM.DECMULT
+        grades: cm2
+        label: 'Multiplier un nombre décimal par un nombre entier'
+      - code: MATH.CM2.NUM.DECDIV
+        grades: cm2
+        label: 'Diviser un nombre décimal par un nombre entier'
+      - code: MATH.6E.NUM.FRAC
+        grades: 6e
+        label: 'Utiliser une fraction comme quotient, reconnaître des fractions égales'
+      - code: MATH.6E.NUM.DEC
+        grades: 6e
+        label: 'Comparer, ranger et encadrer des nombres décimaux'
+      - code: MATH.6E.NUM.DECMULT
+        grades: 6e
+        label: 'Multiplier deux nombres décimaux'
+      - code: MATH.6E.NUM.MULTIPLES
+        grades: 6e
+        label: 'Reconnaître multiples et diviseurs (critères de divisibilité)'
+      - code: MATH.5E.NUM.REL
+        grades: 5e
+        label: 'Comparer, additionner et soustraire des nombres relatifs'
+      - code: MATH.5E.NUM.FRACADD
+        grades: 5e
+        label: 'Additionner et soustraire des fractions'
+      - code: MATH.5E.NUM.PRIO
+        grades: 5e
+        label: 'Appliquer les priorités opératoires'
+      - code: MATH.5E.NUM.LIT
+        grades: 5e
+        label: 'Produire et utiliser une expression littérale'
+      - code: MATH.4E.NUM.RELMULT
+        grades: 4e
+        label: 'Multiplier et diviser des nombres relatifs'
+      - code: MATH.4E.NUM.FRACMULT
+        grades: 4e
+        label: 'Multiplier et diviser des fractions'
+      - code: MATH.4E.NUM.POW
+        grades: 4e
+        label: 'Calculer avec des puissances'
+      - code: MATH.4E.NUM.EXPAND
+        grades: 4e
+        label: 'Développer et factoriser une expression simple'
+      - code: MATH.4E.NUM.EQ
+        grades: 4e
+        label: 'Résoudre une équation du premier degré'
+      - code: MATH.3E.NUM.PRIMES
+        grades: 3e
+        label: 'Décomposer un nombre en produit de facteurs premiers'
+      - code: MATH.3E.NUM.IDENT
+        grades: 3e
+        label: 'Utiliser les identités remarquables'
+      - code: MATH.3E.NUM.EQPROD
+        grades: 3e
+        label: 'Résoudre une équation produit et une inéquation'
+
+  - code: MATH.PROB
+    label: 'Résolution de problèmes'
+    skills:
+      - code: MATH.CP.PROB.ONESTEP
+        grades: cp
+        label: 'Résoudre un problème additif ou soustractif en une étape'
+      - code: MATH.CE1.PROB.ADD
+        grades: ce1
+        label: 'Résoudre des problèmes additifs et soustractifs'
+      - code: MATH.CE1.PROB.GROUPS
+        grades: ce1
+        label: 'Résoudre des problèmes de groupements (sens de la multiplication)'
+      - code: MATH.CE2.PROB.2STEPS
+        grades: ce2
+        label: 'Résoudre des problèmes à deux étapes'
+      - code: MATH.CE2.PROB.DATA
+        grades: ce2
+        label: 'Trier les informations utiles d’un énoncé'
+      - code: MATH.CM1.PROB.MULTI
+        grades: cm1
+        label: 'Résoudre des problèmes à plusieurs étapes'
+      - code: MATH.CM1.PROB.PROP
+        grades: cm1
+        label: 'Résoudre des problèmes de proportionnalité simples'
+      - code: MATH.CM2.PROB.MULTI
+        grades: cm2
+        label: 'Résoudre des problèmes à plusieurs étapes avec des décimaux'
+      - code: MATH.CM2.PROB.UNIT
+        grades: cm2
+        label: 'Résoudre un problème de proportionnalité par passage à l’unité'
+      - code: MATH.6E.PROB.PERCENT
+        grades: 6e
+        label: 'Appliquer un pourcentage simple'
+      - code: MATH.6E.PROB.PROP
+        grades: 6e
+        label: 'Reconnaître une situation de proportionnalité'
+      - code: MATH.5E.PROB.PROP
+        grades: 5e
+        label: 'Résoudre des problèmes de proportionnalité et de pourcentages'
+      - code: MATH.4E.PROB.EQ
+        grades: 4e
+        label: 'Mettre un problème en équation'
+
+  - code: MATH.MES
+    label: 'Grandeurs et mesures'
+    skills:
+      - code: MATH.CP.MES.LENGTH
+        grades: cp
+        label: 'Comparer et mesurer des longueurs'
+      - code: MATH.CE1.MES.MONEY
+        grades: ce1
+        label: 'Utiliser la monnaie (euros et centimes)'
+      - code: MATH.CE1.MES.TIME
+        grades: ce1
+        label: 'Lire l’heure et mesurer des durées'
+      - code: MATH.CE2.MES.LENGTH
+        grades: ce2
+        label: 'Mesurer et convertir des longueurs (km, m, cm, mm)'
+      - code: MATH.CE2.MES.MASS
+        grades: ce2
+        label: 'Mesurer des masses et des contenances'
+      - code: MATH.CM1.MES.PERIM
+        grades: cm1
+        label: 'Calculer le périmètre d’un polygone'
+      - code: MATH.CM2.MES.AREA
+        grades: cm2
+        label: 'Calculer l’aire d’un carré et d’un rectangle'
+      - code: MATH.CM2.MES.DURATION
+        grades: cm2
+        label: 'Calculer des durées'
+      - code: MATH.6E.MES.CIRCLE
+        grades: 6e
+        label: 'Calculer le périmètre d’un cercle et l’aire d’un disque'
+      - code: MATH.6E.MES.VOLUME
+        grades: 6e
+        label: 'Calculer le volume d’un pavé droit'
+      - code: MATH.5E.MES.VOLUME
+        grades: 5e
+        label: 'Calculer le volume d’un prisme et d’un cylindre'
+      - code: MATH.3E.MES.SPEED
+        grades: 3e
+        label: 'Calculer avec des grandeurs composées (vitesse, débit)'
+
+  - code: MATH.GEO
+    label: 'Espace et géométrie'
+    skills:
+      - code: MATH.CP.GEO.SHAPES
+        grades: cp
+        label: 'Reconnaître carré, rectangle, triangle et cercle'
+      - code: MATH.CP.GEO.GRID
+        grades: cp
+        label: 'Se repérer et se déplacer sur un quadrillage'
+      - code: MATH.CE1.GEO.SOLIDS
+        grades: ce1
+        label: 'Reconnaître des solides (cube, pavé, pyramide)'
+      - code: MATH.CE2.GEO.ANGLE
+        grades: ce2
+        label: 'Reconnaître et tracer un angle droit'
+      - code: MATH.CM1.GEO.FIGURES
+        grades: cm1
+        label: 'Construire un carré, un rectangle et un triangle'
+      - code: MATH.CM2.GEO.PROGRAM
+        grades: cm2
+        label: 'Suivre un programme de construction'
+      - code: MATH.6E.GEO.ANGLES
+        grades: 6e
+        label: 'Mesurer et construire des angles'
+      - code: MATH.6E.GEO.SYM
+        grades: 6e
+        label: 'Construire le symétrique d’une figure par rapport à une droite'
+      - code: MATH.5E.GEO.TRIANGLE
+        grades: 5e
+        label: 'Utiliser l’inégalité triangulaire et la somme des angles'
+      - code: MATH.5E.GEO.CENTRAL
+        grades: 5e
+        label: 'Construire le symétrique d’une figure par rapport à un point'
+      - code: MATH.4E.GEO.PYTH
+        grades: 4e
+        label: 'Utiliser le théorème de Pythagore'
+      - code: MATH.4E.GEO.TRANSL
+        grades: 4e
+        label: 'Construire l’image d’une figure par translation'
+      - code: MATH.3E.GEO.THALES
+        grades: 3e
+        label: 'Utiliser le théorème de Thalès et sa réciproque'
+      - code: MATH.3E.GEO.TRIGO
+        grades: 3e
+        label: 'Calculer avec la trigonométrie dans le triangle rectangle'
+      - code: MATH.3E.GEO.HOMOT
+        grades: 3e
+        label: 'Agrandir et réduire une figure (homothétie)'
+
+  - code: MATH.DATA
+    label: 'Données et fonctions'
+    skills:
+      - code: MATH.CM1.DATA.TABLE
+        grades: cm1
+        label: 'Lire et utiliser un tableau ou un graphique'
+      - code: MATH.CM2.DATA.GRAPH
+        grades: cm2
+        label: 'Construire un tableau ou un graphique'
+      - code: MATH.5E.DATA.MEAN
+        grades: 5e
+        label: 'Calculer une moyenne et une fréquence'
+      - code: MATH.4E.DATA.PROBA
+        grades: 4e
+        label: 'Calculer des probabilités simples'
+      - code: MATH.3E.DATA.STATS
+        grades: 3e
+        label: 'Calculer une médiane et une étendue'
+      - code: MATH.3E.DATA.FUNC
+        grades: 3e
+        label: 'Utiliser les fonctions linéaires et affines'
+
+  - code: MATH.ALGO
+    label: 'Algorithmique et programmation'
+    skills:
+      - code: MATH.5E.ALGO.SEQ
+        grades: 5e-4e
+        label: 'Écrire un programme simple (séquences, boucles)'
+      - code: MATH.3E.ALGO.COND
+        grades: 3e
+        label: 'Écrire un programme avec des conditions et des variables'
