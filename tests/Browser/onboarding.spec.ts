@@ -61,7 +61,40 @@ test('onboarding : compte, profil de l’enfant, retour sans perte, jusqu’à l
     );
 
     await page.getByRole('button', { name: 'Continuer' }).click();
-    for (const step of [3, 4, 5, 6, 7]) {
+
+    // Écran 3 : univers
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+        'Découvrons l’univers de Lucas',
+    );
+    await page.getByRole('button', { name: 'Continuer' }).click();
+    await expect(page.getByText('Choisissez au moins une passion', { exact: false })).toBeVisible();
+    await page.getByRole('button', { name: 'Football' }).click();
+    await page.getByLabel('Autres passions, personnages ou thèmes favoris').fill('Les robots');
+    await page.getByLabel('Autres passions, personnages ou thèmes favoris').press('Enter');
+    await expect(page.getByText('2 univers choisis', { exact: false })).toBeVisible();
+    await expectNoSeriousViolations(page);
+    await page.getByRole('button', { name: 'Continuer' }).click();
+
+    // Écran 4 : objectifs, puis retour à l'écran 3 sans perte.
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Quels sont vos objectifs ?');
+    await page.getByRole('contentinfo').getByRole('link', { name: 'Retour' }).click();
+    await expect(page.getByRole('button', { name: 'Football' })).toHaveAttribute(
+        'aria-pressed',
+        'true',
+    );
+    await expect(page.getByText('Les robots')).toBeVisible();
+    await page.getByRole('button', { name: 'Continuer' }).click();
+
+    await page.getByRole('button', { name: 'Reprendre confiance' }).click();
+    await page.getByRole('button', { name: 'Progresser en maths' }).click();
+    await page.getByRole('radio', { name: 'Progresser en maths' }).check();
+    await expect(
+        page.getByText('Les activités de mathématiques seront proposées en priorité.'),
+    ).toBeVisible();
+    await expectNoSeriousViolations(page);
+    await page.getByRole('button', { name: 'Continuer' }).click();
+
+    for (const step of [5, 6, 7]) {
         await expect(page.getByRole('progressbar')).toHaveAttribute(
             'aria-valuetext',
             `Étape ${step} sur 7`,

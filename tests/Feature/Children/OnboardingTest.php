@@ -33,6 +33,20 @@ function childData(array $overrides = []): array
     ];
 }
 
+// Valide les écrans 2 à $upTo par leurs vraies routes, avec des réponses valides.
+function walkOnboarding(Onboarding $onboarding, int $upTo): void
+{
+    $steps = [
+        2 => fn () => test()->put(route('onboarding.child.update', $onboarding), childData()),
+        3 => fn () => test()->put(route('onboarding.interests.update', $onboarding), ['interests' => ['football'], 'custom' => []]),
+        4 => fn () => test()->put(route('onboarding.goals.update', $onboarding), ['goals' => ['regain_confidence'], 'primary' => 'regain_confidence']),
+    ];
+
+    foreach (range(2, $upTo) as $step) {
+        ($steps[$step] ?? fn () => test()->post(route('onboarding.step.next', [$onboarding, $step])))();
+    }
+}
+
 describe('écran 2 : profil de l’enfant', function (): void {
     test('un parent non vérifié peut décrire son enfant', function (): void {
         [, $onboarding] = freshParent();
@@ -48,7 +62,7 @@ describe('écran 2 : profil de l’enfant', function (): void {
         [$parent, $onboarding] = freshParent();
 
         $this->put(route('onboarding.child.update', $onboarding), childData())
-            ->assertRedirect(route('onboarding.step', [$onboarding, 3]));
+            ->assertRedirect(route('onboarding.interests', $onboarding));
 
         $child = ChildProfile::query()->sole();
         expect($child)
@@ -108,12 +122,8 @@ describe('progression et reprise', function (): void {
 
     test('le parcours va jusqu’au bout, puis l’espace parent exige la vérification', function (): void {
         [$parent, $onboarding] = freshParent();
-        $this->put(route('onboarding.child.update', $onboarding), childData());
 
-        foreach ([3, 4, 5, 6] as $step) {
-            $this->post(route('onboarding.step.next', [$onboarding, $step]))
-                ->assertRedirect(route('onboarding.step', [$onboarding, $step + 1]));
-        }
+        walkOnboarding($onboarding, 6);
         $this->post(route('onboarding.step.next', [$onboarding, 7]))->assertRedirect(route('dashboard'));
 
         expect($onboarding->fresh()?->isCompleted())->toBeTrue();
@@ -125,22 +135,18 @@ describe('progression et reprise', function (): void {
 
     test('après une nouvelle connexion, « dashboard » reprend là où on s’était arrêté', function (): void {
         [$parent, $onboarding] = freshParent();
-        $this->put(route('onboarding.child.update', $onboarding), childData());
-        $this->post(route('onboarding.step.next', [$onboarding, 3]));
+        walkOnboarding($onboarding, 3);
 
         $this->post('/logout');
         $this->post('/login', ['email' => $parent->email, 'password' => 'password'])
             ->assertRedirect(route('dashboard', absolute: false));
 
-        $this->get(route('dashboard'))->assertRedirect(route('onboarding.step', [$onboarding, 4]));
+        $this->get(route('dashboard'))->assertRedirect(route('onboarding.goals', $onboarding));
     });
 
     test('ajouter un enfant ouvre un nouvel onboarding, sans toucher au premier', function (): void {
         [$parent, $first] = freshParent();
-        $this->put(route('onboarding.child.update', $first), childData());
-        foreach ([3, 4, 5, 6, 7] as $step) {
-            $this->post(route('onboarding.step.next', [$first, $step]));
-        }
+        walkOnboarding($first, 7);
 
         $this->post(route('onboarding.start'));
 

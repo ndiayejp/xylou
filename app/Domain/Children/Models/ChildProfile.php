@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
@@ -69,6 +71,24 @@ class ChildProfile extends Model implements AuthenticatableContract
     public function comfort(string $option): bool
     {
         return (bool) ($this->comfort_settings[$option] ?? false);
+    }
+
+    /** @return BelongsToMany<Interest, $this> */
+    public function interests(): BelongsToMany
+    {
+        return $this->belongsToMany(Interest::class, 'child_interest')->withPivot('rank')->orderByPivot('rank');
+    }
+
+    /** @return HasMany<CustomInterest, $this> */
+    public function customInterests(): HasMany
+    {
+        return $this->hasMany(CustomInterest::class)->orderBy('id');
+    }
+
+    /** @return HasMany<ChildGoal, $this> */
+    public function goals(): HasMany
+    {
+        return $this->hasMany(ChildGoal::class)->orderByDesc('is_primary')->orderBy('id');
     }
 
     /** @return BelongsTo<User, $this> */
