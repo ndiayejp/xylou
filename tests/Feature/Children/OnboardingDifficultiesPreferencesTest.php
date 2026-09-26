@@ -122,7 +122,7 @@ describe('écran 6 : préférences', function (): void {
 
         $this->put(route('onboarding.preferences.update', $onboarding), [
             'styles' => ['visual', 'small_steps'], 'session_minutes' => 15, 'gentle_reminder' => true,
-        ])->assertRedirect(route('onboarding.step', [$onboarding, 7]));
+        ])->assertRedirect(route('onboarding.summary', $onboarding));
 
         $this->put(route('onboarding.preferences.update', $onboarding), [
             'styles' => ['interactive'], 'session_minutes' => 5, 'gentle_reminder' => false,

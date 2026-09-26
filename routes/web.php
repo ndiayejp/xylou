@@ -13,6 +13,7 @@ use App\Http\Controllers\Onboarding\InterestsStepController;
 use App\Http\Controllers\Onboarding\PreferencesStepController;
 use App\Http\Controllers\Onboarding\StartController as OnboardingStartController;
 use App\Http\Controllers\Onboarding\StepController as OnboardingStepController;
+use App\Http\Controllers\Onboarding\SummaryStepController;
 use App\Http\Controllers\Parent\CurrentChildController;
 use App\Http\Controllers\Parent\DashboardController as ParentDashboardController;
 use App\Http\Controllers\Parent\KidSessionController;
@@ -56,6 +57,8 @@ Route::middleware(['auth', 'role:'.Role::Parent->value])
         Route::put('{onboarding}/difficultes', [DifficultiesStepController::class, 'update'])->name('difficulties.update');
         Route::get('{onboarding}/preferences', [PreferencesStepController::class, 'show'])->name('preferences');
         Route::put('{onboarding}/preferences', [PreferencesStepController::class, 'update'])->name('preferences.update');
+        Route::get('{onboarding}/resume', [SummaryStepController::class, 'show'])->name('summary');
+        Route::put('{onboarding}/resume', [SummaryStepController::class, 'update'])->name('summary.update');
         Route::get('{onboarding}/etape/{step}', [OnboardingStepController::class, 'show'])
             ->whereNumber('step')->name('step');
         Route::post('{onboarding}/etape/{step}', [OnboardingStepController::class, 'store'])

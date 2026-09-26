@@ -12,7 +12,7 @@ use App\Http\Navigation\OnboardingRoute;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 
-// Base des écrans 3 à 6 : autorisation, étape accessible, enfant décrit, passage à l'écran suivant.
+// Base des écrans 3 à 7 : autorisation, étape accessible, enfant décrit, passage à l'écran suivant.
 abstract class OnboardingStepController extends Controller
 {
     abstract protected function step(): int;
@@ -46,6 +46,6 @@ abstract class OnboardingStepController extends Controller
     {
         $advance($onboarding, $this->step());
 
-        return redirect(OnboardingRoute::for($onboarding, $this->step() + 1));
+        return redirect(OnboardingRoute::after($onboarding, $this->step()));
     }
 }

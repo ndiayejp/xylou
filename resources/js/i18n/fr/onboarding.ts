@@ -160,8 +160,35 @@ export default {
         reminderHint: 'Me proposer une activité le mercredi et le week-end',
         submit: 'Voir le résumé',
     },
-    pending: {
-        title: 'Cette étape arrive bientôt',
-        text: 'Vous pouvez continuer : rien n’est perdu, et vous pourrez la compléter plus tard.',
+    summary: {
+        title: 'Tout est prêt',
+        description: 'Voici ce que Xylou a compris. Un détail à corriger ? Touchez le crayon.',
+        created: 'Profil créé',
+        universe: 'L’univers de {name}',
+        universeElided: 'L’univers d’{name}',
+        edit: 'Modifier : {section}',
+        sections: {
+            profile: 'Niveau',
+            interests: 'Passions',
+            goals: 'Objectifs',
+            difficulties: 'À renforcer',
+            learning: 'Façons d’apprendre',
+            comfort: 'Confort',
+        },
+        primary: 'principal',
+        none: {
+            difficulties: 'Rien d’indiqué pour l’instant',
+            learning: 'Xylou ajustera au fil des activités',
+            comfort: 'Réglages standard',
+        },
+        comfort: {
+            read_aloud: 'Lecture à voix haute',
+            dyslexia_font: 'Police très lisible',
+            no_timer: 'Sans chronomètre',
+        },
+        reminder: 'Rappel doux',
+        approval: 'Chaque activité générée vous sera montrée avant d’arriver chez {name}.',
+        addChild: 'Ajouter un autre enfant',
+        submit: 'Découvrir mon espace',
     },
 };

@@ -74,6 +74,6 @@ final class ChildStepController extends Controller
             noTimer: $request->boolean('no_timer'),
         ));
 
-        return redirect(OnboardingRoute::for($onboarding, Onboarding::FIRST_STEP + 1));
+        return redirect(OnboardingRoute::after($onboarding, Onboarding::FIRST_STEP));
     }
 }
