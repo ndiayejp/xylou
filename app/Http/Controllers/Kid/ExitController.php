@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Kid;
 
+use App\Domain\Children\Models\ChildProfile;
+use App\Domain\Identity\Events\KidSessionClosed;
+use App\Domain\Identity\Events\ParentCodeRejected;
 use App\Domain\Identity\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Parent\KidSessionController;
@@ -31,13 +34,14 @@ final class ExitController extends Controller
     {
         $request->validate(['code' => ['required', 'string']]);
         $parent = $this->parent($request);
+        $child = Auth::guard('kid')->user();
 
-        if (! $parent instanceof User) {
+        if (! $parent instanceof User || ! $child instanceof ChildProfile) {
             return $this->closeKidSession($request, to_route('login'));
         }
 
         // Clé liée à l'enfant : stable, et indépendante des cookies de l'appareil.
-        $key = 'kid-exit:'.Auth::guard('kid')->id();
+        $key = 'kid-exit:'.$child->id;
 
         if (RateLimiter::tooManyAttempts($key, self::MAX_ATTEMPTS)) {
             throw ValidationException::withMessages([
@@ -46,7 +50,8 @@ final class ExitController extends Controller
         }
 
         if (! $parent->checkParentCode($request->string('code')->toString())) {
-            RateLimiter::hit($key);
+            $attempts = RateLimiter::hit($key);
+            event(new ParentCodeRejected($parent, $child, $attempts >= self::MAX_ATTEMPTS));
 
             throw ValidationException::withMessages(['code' => trans('kid.exit.wrong_code')]);
         }
@@ -54,6 +59,7 @@ final class ExitController extends Controller
         RateLimiter::clear($key);
         $response = $this->closeKidSession($request, to_route('parent.dashboard'));
         Auth::guard('web')->login($parent);
+        event(new KidSessionClosed($parent, $child));
 
         return $response;
     }
