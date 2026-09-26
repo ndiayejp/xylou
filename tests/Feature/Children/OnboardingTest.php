@@ -40,6 +40,8 @@ function walkOnboarding(Onboarding $onboarding, int $upTo): void
         2 => fn () => test()->put(route('onboarding.child.update', $onboarding), childData()),
         3 => fn () => test()->put(route('onboarding.interests.update', $onboarding), ['interests' => ['football'], 'custom' => []]),
         4 => fn () => test()->put(route('onboarding.goals.update', $onboarding), ['goals' => ['regain_confidence'], 'primary' => 'regain_confidence']),
+        5 => fn () => test()->put(route('onboarding.difficulties.update', $onboarding), ['difficulties' => []]),
+        6 => fn () => test()->put(route('onboarding.preferences.update', $onboarding), ['session_minutes' => 10]),
     ];
 
     foreach (range(2, $upTo) as $step) {

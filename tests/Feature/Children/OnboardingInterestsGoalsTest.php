@@ -123,7 +123,7 @@ describe('écran 4 : objectifs', function (): void {
             'goals' => ['regain_confidence', 'progress_maths', 'other'],
             'primary' => 'progress_maths',
             'note' => 'Préparer l’entrée en 6e',
-        ])->assertRedirect(route('onboarding.step', [$onboarding, 5]));
+        ])->assertRedirect(route('onboarding.difficulties', $onboarding));
 
         $goals = ChildProfile::query()->sole()->goals;
         expect($goals->first()?->goal)->toBe(Goal::ProgressMaths)

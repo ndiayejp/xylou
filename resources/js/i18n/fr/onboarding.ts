@@ -114,6 +114,52 @@ export default {
             other: 'Votre précision aidera Xylou à choisir les activités.',
         },
     },
+    difficulties: {
+        // Formulé sans genre : on ne demande pas le genre de l'enfant (minimisation).
+        title: 'Sur quoi aider {name} ?',
+        description:
+            'Pas d’inquiétude : il n’y a pas de mauvaise réponse. Vous pouvez aussi passer cette étape.',
+        subject: 'Matière',
+        subjects: {
+            maths: 'Mathématiques',
+            french: 'Français',
+            sciences: 'Sciences',
+            other: 'Autre',
+        },
+        observation: 'Ce que vous observez',
+        observationOptional: '(facultatif)',
+        observationPlaceholder: 'Ex. : il comprend le calcul mais se perd quand l’énoncé est long.',
+        daily: 'Au quotidien',
+        private:
+            'Ces informations restent privées et ne sont jamais montrées à {name}. Vous pouvez les modifier à tout moment.',
+        skip: 'Je ne sais pas encore',
+        selected:
+            '{count} difficulté sélectionnée | {count} difficulté sélectionnée | {count} difficultés sélectionnées',
+    },
+    preferences: {
+        title: 'Ce qui aide {name} à apprendre',
+        description: 'Choisissez ce qui lui ressemble. Xylou ajustera au fil des activités.',
+        styles: 'Façons d’apprendre',
+        styleOptions: {
+            visual: { title: 'Visuel', description: 'Schémas, images, couleurs' },
+            concrete_examples: {
+                title: 'Exemples concrets',
+                description: 'Des situations de la vie',
+            },
+            small_steps: { title: 'Petites étapes', description: 'Un problème découpé' },
+            repetition: { title: 'Répétition', description: 'Revoir souvent, un peu' },
+            short_explanations: {
+                title: 'Explications courtes',
+                description: 'Aller à l’essentiel',
+            },
+            interactive: { title: 'Exercices interactifs', description: 'Glisser, manipuler' },
+        },
+        duration: 'Durée idéale d’une séance',
+        minutes: '{count} min',
+        reminder: 'Rappel doux',
+        reminderHint: 'Me proposer une activité le mercredi et le week-end',
+        submit: 'Voir le résumé',
+    },
     pending: {
         title: 'Cette étape arrive bientôt',
         text: 'Vous pouvez continuer : rien n’est perdu, et vous pourrez la compléter plus tard.',
