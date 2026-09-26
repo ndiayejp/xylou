@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Domain\Children\Models\ChildProfile;
 use App\Domain\Identity\Models\User;
 
 return [
@@ -44,6 +45,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        // Session enfant (§7.2) : ouverte par un parent, sans compte ni mot de passe.
+        'kid' => [
+            'driver' => 'session',
+            'provider' => 'children',
+        ],
     ],
 
     /*
@@ -67,6 +74,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', User::class),
+        ],
+
+        'children' => [
+            'driver' => 'eloquent',
+            'model' => ChildProfile::class,
         ],
 
         // 'users' => [

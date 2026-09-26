@@ -25,6 +25,23 @@ export default {
         security: 'Sécurité',
         logout: 'Se déconnecter',
     },
+    kid: {
+        exitLink: 'Espace parent',
+        home: {
+            greeting: 'Bonjour {name} !',
+            emptyTitle: 'Tes aventures arrivent bientôt',
+            emptyText: 'Quand une activité t’attendra, elle apparaîtra ici.',
+        },
+        exit: {
+            title: 'Retour à l’espace parent',
+            descriptionPin: 'Saisissez votre code parent à 4 à 6 chiffres.',
+            descriptionPassword: 'Saisissez le mot de passe de votre compte parent.',
+            pin: 'Code parent',
+            password: 'Mot de passe',
+            submit: 'Revenir à l’espace parent',
+            back: 'Rester dans l’espace de l’enfant',
+        },
+    },
     children: {
         grades: {
             cp: 'CP',
@@ -45,6 +62,8 @@ export default {
             weekElided: 'La semaine d’{name}',
             noActivityTitle: 'Pas encore d’activité cette semaine',
             noActivityText: 'Ses activités et sa progression apparaîtront ici.',
+            openKidSpace: 'Ouvrir l’espace de {name}',
+            openKidSpaceElided: 'Ouvrir l’espace d’{name}',
             title: 'Bonjour {name}',
             emptyTitle: 'Ajoutez votre premier enfant',
             emptyText: 'Son espace, ses activités et sa progression apparaîtront ici.',
@@ -84,7 +103,21 @@ export default {
                 'Gardez-les en lieu sûr : chacun permet une connexion si vous n’avez plus accès à votre téléphone.',
             regenerate: 'Générer de nouveaux codes',
         },
+        parentPin: {
+            title: 'Code parent',
+            description:
+                'Ce code vous permet de quitter l’espace de votre enfant sans retaper votre mot de passe. Sans code, c’est votre mot de passe qui est demandé.',
+            enabled: 'Défini',
+            disabled: 'Non défini',
+            pin: 'Nouveau code (4 à 6 chiffres)',
+            pinConfirmation: 'Confirmez le code',
+            save: 'Enregistrer le code',
+            remove: 'Supprimer le code',
+        },
         status: {
+            'parent-pin-updated': 'Votre code parent est enregistré.',
+            'parent-pin-removed':
+                'Votre code parent est supprimé : votre mot de passe sera demandé.',
             'two-factor-authentication-confirmed': 'La vérification en deux étapes est activée.',
             'two-factor-authentication-disabled': 'La vérification en deux étapes est désactivée.',
             'recovery-codes-generated': 'De nouveaux codes de secours ont été générés.',

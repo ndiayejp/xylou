@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Settings;
 
+use App\Domain\Identity\Enums\Role;
 use App\Domain\Identity\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Container\Attributes\CurrentUser;
@@ -28,6 +29,8 @@ final class SecurityController extends Controller
                 'setupKey' => $pending ? Crypt::decrypt($user->two_factor_secret) : null,
                 'recoveryCodes' => $enabled ? $user->recoveryCodes() : [],
             ],
+            // Code parent : seulement pour un parent (sortie de la session enfant).
+            'parentPin' => $user->hasRole(Role::Parent->value) ? ['enabled' => $user->hasParentPin()] : null,
             'status' => session('status'),
         ]);
     }

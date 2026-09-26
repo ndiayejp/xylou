@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { Lock } from '@lucide/vue';
 import XLogo from '@/Components/ui/XLogo.vue';
 import type { NavItem } from './navigation';
 import SkipLink from './partials/SkipLink.vue';
@@ -10,7 +11,10 @@ import ToastRegion from './partials/ToastRegion.vue';
 // Jamais de texte enfant sous 18 px : sur mobile, seul l'onglet courant affiche son libellé,
 // sous son icône, les autres le gardent pour les lecteurs d'écran (5 libellés à 18 px ne tiennent
 // pas en 390 px).
-defineProps<{ nav: NavItem[]; homeHref: string }>();
+// exitHref : retour à l'espace parent (demande le code parent).
+withDefaults(defineProps<{ nav: NavItem[]; homeHref: string; exitHref?: string }>(), {
+    exitHref: undefined,
+});
 </script>
 
 <template>
@@ -45,6 +49,15 @@ defineProps<{ nav: NavItem[]; homeHref: string }>();
         </nav>
 
         <main id="contenu" class="min-w-0 grow pb-24 md:pb-0">
+            <div v-if="exitHref" class="flex justify-end px-4 pt-4 md:px-8">
+                <Link
+                    :href="exitHref"
+                    class="inline-flex min-h-touch items-center gap-2 rounded-full border-2 border-line bg-surface px-4 text-[18px] font-bold text-muted hover:text-text"
+                >
+                    <Lock :size="20" aria-hidden="true" />
+                    {{ $t('kid.exitLink') }}
+                </Link>
+            </div>
             <slot />
         </main>
 

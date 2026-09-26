@@ -9,6 +9,7 @@ use App\Domain\Identity\Enums\Role;
 use App\Domain\Identity\Models\User;
 use App\Http\Controllers\Parent\CurrentChildController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -35,7 +36,8 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $user = $request->user();
+        // Garde « web » explicite : pendant une session enfant, seule la garde « kid » est connectée.
+        $user = $request->user('web');
 
         return [
             ...parent::share($request),
@@ -48,6 +50,14 @@ class HandleInertiaRequests extends Middleware
             'parent' => fn (): ?array => $user instanceof User && $user->hasRole(Role::Parent->value)
                 ? $this->parentSpace($request, $user)
                 : null,
+            // Session enfant : seulement le prénom, rien de l'espace parent.
+            'kid' => function (): ?array {
+                $child = Auth::guard('kid')->user();
+
+                return $child instanceof ChildProfile
+                    ? ['id' => $child->id, 'firstName' => $child->first_name]
+                    : null;
+            },
         ];
     }
 
