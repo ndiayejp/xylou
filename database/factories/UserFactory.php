@@ -46,6 +46,16 @@ class UserFactory extends Factory
         ]);
     }
 
+    // 2FA active et confirmée ; codes de secours connus pour les tests.
+    public function withTwoFactor(string $secret = 'JBSWY3DPEHPK3PXP'): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'two_factor_secret' => encrypt($secret),
+            'two_factor_recovery_codes' => encrypt(json_encode(['code-secours-1', 'code-secours-2'])),
+            'two_factor_confirmed_at' => now(),
+        ]);
+    }
+
     public function parent(): static
     {
         return $this->withRole(Role::Parent);

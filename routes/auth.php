@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Domain\Identity\Enums\Role;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -11,7 +12,12 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Settings\SecurityController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Http\Controllers\ConfirmedTwoFactorAuthenticationController;
+use Laravel\Fortify\Http\Controllers\RecoveryCodeController;
+use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
+use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticationController;
 
 Route::middleware('guest')->group(function (): void {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -35,6 +41,33 @@ Route::middleware('guest')->group(function (): void {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
+    // 2FA à la connexion (Fortify) : identifiants déjà validés, code attendu.
+    Route::get('two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'create'])
+        ->name('two-factor.login');
+
+    Route::post('two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'store'])
+        ->middleware('throttle:two-factor')
+        ->name('two-factor.login.store');
+});
+
+// Gestion de la 2FA (Fortify, ADR 0012), toujours derrière une confirmation du mot de passe.
+Route::middleware(['auth', 'password.confirm'])->group(function (): void {
+    Route::get('settings/security', SecurityController::class)->name('settings.security');
+
+    Route::post('user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'store'])
+        ->name('two-factor.enable');
+
+    Route::post('user/confirmed-two-factor-authentication', [ConfirmedTwoFactorAuthenticationController::class, 'store'])
+        ->name('two-factor.confirm');
+
+    // Obligatoire pour les pros : seul un parent peut la désactiver.
+    Route::delete('user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'destroy'])
+        ->middleware('role:'.Role::Parent->value)
+        ->name('two-factor.disable');
+
+    Route::post('user/two-factor-recovery-codes', [RecoveryCodeController::class, 'store'])
+        ->name('two-factor.regenerate-recovery-codes');
 });
 
 Route::middleware('auth')->group(function (): void {

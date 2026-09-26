@@ -31,9 +31,20 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        $user = $request->validateCredentials();
+        $remember = $request->boolean('remember');
 
+        // Avec la 2FA, Fortify ouvre la session après le code (session login.id / login.remember).
+        if ($user->hasEnabledTwoFactorAuthentication()) {
+            $request->session()->put(['login.id' => $user->getKey(), 'login.remember' => $remember]);
+
+            return to_route('two-factor.login');
+        }
+
+        Auth::login($user, $remember);
         $request->session()->regenerate();
+        // Le mot de passe vient d'être saisi : inutile de le redemander (ex. pro envoyé vers la 2FA).
+        $request->session()->passwordConfirmed();
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

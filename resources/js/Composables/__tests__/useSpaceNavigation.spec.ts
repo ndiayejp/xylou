@@ -24,6 +24,7 @@ describe('useSpaceNavigation', () => {
                     'parent.dashboard',
                     'pro.dashboard',
                     'profile.edit',
+                    'settings.security',
                     'logout',
                     'parent.children.index',
                 ],
@@ -57,6 +58,7 @@ describe('useSpaceNavigation', () => {
     it('propose le profil et la déconnexion (en POST)', () => {
         expect(useProNavigation().accountLinks).toEqual([
             { label: 'layout.profile', href: '/profile/edit' },
+            { label: 'layout.security', href: '/settings/security' },
             { label: 'layout.logout', href: '/logout', method: 'post' },
         ]);
     });

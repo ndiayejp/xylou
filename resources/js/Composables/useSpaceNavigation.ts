@@ -88,6 +88,7 @@ function action(name: string, label: string, icon: Component): LayoutAction | un
 function accountLinks(): AccountLink[] {
     return [
         { label: 'layout.profile', href: route('profile.edit') },
+        { label: 'layout.security', href: route('settings.security') },
         { label: 'layout.logout', href: route('logout'), method: 'post' },
     ];
 }
