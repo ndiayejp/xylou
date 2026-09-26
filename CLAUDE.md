@@ -66,7 +66,8 @@ Laravel (PHP ≥ 8.3, `strict_types`) · PostgreSQL · Redis/Horizon · Reverb �
 ```bash
 composer services         # Redis, Meilisearch, Mailpit (Docker)
 composer setup            # dépendances, .env, key:generate, migrate, npm install + build
-composer dev              # artisan serve + queue:listen + pail (logs) + vite en parallèle
+composer dev              # artisan serve + queue:listen + vite en parallèle
+composer logs             # Pail (logs en direct) ; exige pcntl, donc pas sous Windows : lire storage/logs/laravel.log
 
 composer test             # config:clear puis php artisan test (suites Architecture, Unit, Feature)
 php artisan test --testsuite=Architecture

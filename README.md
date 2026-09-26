@@ -27,11 +27,13 @@ composer services
 # 3. Dépendances, .env, clé, migrations, build
 composer setup
 
-# 4. Serveur, file d'attente, logs et Vite
+# 4. Serveur, file d'attente et Vite
 composer dev
 ```
 
-L'application tourne sur http://127.0.0.1:8000. Les e-mails (vérification d'adresse, mot de passe oublié) arrivent dans Mailpit : http://localhost:8025.
+L'application tourne sur http://127.0.0.1:8000. Les e-mails (vérification d'adresse, mot de passe oublié) arrivent dans Mailpit : http://localhost:8025. Comptes de démonstration après `php artisan db:seed` : `parent@example.com` et `pro@example.com`, mot de passe `password`.
+
+Les logs sont dans `storage/logs/laravel.log`. `composer logs` les affiche en direct avec Pail, qui exige l'extension `pcntl` : indisponible sous Windows, elle fonctionne sous Linux, macOS et WSL.
 
 Le `.env.example` pointe sur PostgreSQL au port **5433** ; adapter `DB_PORT` si votre instance écoute ailleurs.
 
