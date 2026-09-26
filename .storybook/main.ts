@@ -17,7 +17,10 @@ function withoutLaravelPlugin(plugins: PluginOption[] = []): PluginOption[] {
 }
 
 export default {
-    stories: ['../resources/js/Components/ui/**/*.stories.ts'],
+    stories: [
+        '../resources/js/Components/ui/**/*.stories.ts',
+        '../resources/js/Layouts/**/*.stories.ts',
+    ],
     addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
     framework: '@storybook/vue3-vite',
     core: { disableTelemetry: true },
