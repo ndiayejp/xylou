@@ -28,3 +28,12 @@ arch('les domaines ne dépendent pas de la couche HTTP')
 arch('Support ne dépend d\'aucun domaine')
     ->expect('App\Support')
     ->not->toUse('App\Domain');
+
+arch('les Actions des domaines sont des classes finales invocables')
+    ->expect(['App\Domain\Identity\Actions', 'App\Domain\Children\Actions'])
+    ->toBeFinal()
+    ->toHaveMethod('__invoke');
+
+arch('les Policies vivent dans leur domaine')
+    ->expect('App\Policies')
+    ->not->toBeUsed();

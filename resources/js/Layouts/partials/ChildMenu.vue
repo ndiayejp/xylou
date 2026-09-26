@@ -19,9 +19,9 @@ const root = ref<HTMLElement>();
 const panelId = useId();
 const current = computed(() => props.items.find((child) => child.id === props.currentId));
 
-function select(id: string | number | undefined): void {
+function select(id: string | number): void {
     open.value = false;
-    if (id !== undefined && id !== props.currentId) {
+    if (id !== props.currentId) {
         emit('switch', id);
     }
 }
@@ -103,7 +103,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onPointerDown)
                 :label="$t('layout.changeChild')"
                 :add-label="canAdd ? $t('layout.addChild') : undefined"
                 class="shadow-card"
-                @update:model-value="select"
+                @select="select"
                 @add="add"
             />
         </div>

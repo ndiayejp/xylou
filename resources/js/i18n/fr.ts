@@ -25,8 +25,26 @@ export default {
         security: 'Sécurité',
         logout: 'Se déconnecter',
     },
+    children: {
+        grades: {
+            cp: 'CP',
+            ce1: 'CE1',
+            ce2: 'CE2',
+            cm1: 'CM1',
+            cm2: 'CM2',
+            '6e': '6e',
+            '5e': '5e',
+            '4e': '4e',
+            '3e': '3e',
+        },
+        age: '{count} an | {count} ans',
+    },
     parent: {
         dashboard: {
+            week: 'La semaine de {name}',
+            weekElided: 'La semaine d’{name}',
+            noActivityTitle: 'Pas encore d’activité cette semaine',
+            noActivityText: 'Ses activités et sa progression apparaîtront ici.',
             title: 'Bonjour {name}',
             emptyTitle: 'Ajoutez votre premier enfant',
             emptyText: 'Son espace, ses activités et sa progression apparaîtront ici.',
