@@ -1,4 +1,4 @@
-import { Clock, Play, Rocket, Send, Trees } from '@lucide/vue';
+import { Clock, Play, Rocket, Send } from '@lucide/vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import XButton from './XButton.vue';
 import XCard from './XCard.vue';
@@ -7,6 +7,7 @@ import XProgressBar from './XProgressBar.vue';
 import XStepProgress from './XStepProgress.vue';
 import XSubjectTag from './XSubjectTag.vue';
 import XTag from './XTag.vue';
+import XUniverseScene from './XUniverseScene.vue';
 
 const meta = {
     title: 'UI/Cartes et progression',
@@ -16,20 +17,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// En attendant XUniverseScene (tâche 3), un aplat coloré tient lieu d'illustration.
 export const CartesActivite: Story = {
     name: 'Cartes d’activité',
     render: () => ({
-        components: { XButton, XCard, XProgressBar, XSubjectTag, XTag },
-        setup: () => ({ Clock, Play, Rocket, Send, Trees }),
+        components: { XButton, XCard, XProgressBar, XSubjectTag, XTag, XUniverseScene },
+        setup: () => ({ Clock, Play, Rocket, Send }),
         template: `
             <div class="flex flex-wrap items-start gap-4">
                 <XCard as="article" class="w-[300px]" interactive>
-                    <template #media>
-                        <div class="flex h-full items-center justify-center bg-tint text-primary-text">
-                            <component :is="Rocket" :size="48" aria-hidden="true" />
-                        </div>
-                    </template>
+                    <template #media><XUniverseScene universe="space" /></template>
                     <div class="flex flex-col gap-2">
                         <div class="flex flex-wrap gap-2">
                             <XSubjectTag subject="maths" label="Mathématiques" size="sm" />
@@ -47,11 +43,7 @@ export const CartesActivite: Story = {
                     </div>
                 </XCard>
                 <XCard as="article" size="kid" class="w-[300px]" interactive>
-                    <template #media>
-                        <div class="flex h-full items-center justify-center bg-success-soft text-success-text">
-                            <component :is="Trees" :size="56" aria-hidden="true" />
-                        </div>
-                    </template>
+                    <template #media><XUniverseScene universe="forest" /></template>
                     <h3 class="text-kid-body !font-black">Le renard compte</h3>
                     <XProgressBar :value="3" :max="5" size="kid" label="Le renard compte" value-text="3/5" />
                     <XButton size="kid" :icon="Play" block>Reprendre</XButton>

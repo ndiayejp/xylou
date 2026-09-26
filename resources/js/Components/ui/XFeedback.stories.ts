@@ -6,6 +6,7 @@ import XCallout from './XCallout.vue';
 import XCard from './XCard.vue';
 import XChildSwitcher from './XChildSwitcher.vue';
 import XEmptyState from './XEmptyState.vue';
+import XMascot from './XMascot.vue';
 import XSkeleton from './XSkeleton.vue';
 import XToast from './XToast.vue';
 
@@ -48,10 +49,10 @@ export const Toasts: Story = {
 export const EtatsVides: Story = {
     name: 'États vides et erreurs',
     render: () => ({
-        components: { XButton, XCard, XEmptyState },
+        components: { XButton, XCard, XEmptyState, XMascot },
         setup: () => ({ Library, Pause, RotateCcw, TriangleAlert }),
         template: `
-            <div class="grid max-w-[1000px] gap-6 sm:grid-cols-3">
+            <div class="grid max-w-[1000px] gap-6 sm:grid-cols-2">
                 <XCard padding="lg" class="flex min-h-[300px] items-center justify-center">
                     <XEmptyState :icon="Library" title="Votre bibliothèque est vide" description="Les activités que vous générez ou enregistrez apparaîtront ici.">
                         <template #actions><XButton size="sm">Générer une activité</XButton></template>
@@ -63,6 +64,12 @@ export const EtatsVides: Story = {
                             <XButton size="sm" :icon="RotateCcw">Réessayer</XButton>
                             <XButton size="sm" variant="ghost">Aide</XButton>
                         </template>
+                    </XEmptyState>
+                </XCard>
+                <XCard size="kid" class="flex min-h-[300px] items-center justify-center">
+                    <XEmptyState size="kid" title="Bienvenue, Emma !" description="Ta première mission t’attend. Pas de note, pas de chrono : juste toi et l’espace.">
+                        <template #illustration><XMascot mood="cheer" animated /></template>
+                        <template #actions><XButton size="kid">C’est parti</XButton></template>
                     </XEmptyState>
                 </XCard>
                 <XCard size="kid" class="flex min-h-[300px] items-center justify-center">
