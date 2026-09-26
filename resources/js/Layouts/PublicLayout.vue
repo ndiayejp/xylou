@@ -5,6 +5,7 @@ import { ref, useId } from 'vue';
 import XLogo from '@/Components/ui/XLogo.vue';
 import type { NavGroup, NavItem } from './navigation';
 import SkipLink from './partials/SkipLink.vue';
+import NavigationProgress from './partials/NavigationProgress.vue';
 import ToastRegion from './partials/ToastRegion.vue';
 
 withDefaults(
@@ -151,5 +152,6 @@ const menuId = useId();
         </footer>
 
         <ToastRegion />
+        <NavigationProgress />
     </div>
 </template>

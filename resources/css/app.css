@@ -24,3 +24,10 @@
         }
     }
 }
+
+@layer components {
+    /* Lien dans un texte (maquette : indigo, gras). */
+    .link {
+        @apply rounded-tag font-bold text-primary-text underline-offset-2 hover:text-primary-strong hover:underline;
+    }
+}

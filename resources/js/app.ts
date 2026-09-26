@@ -23,7 +23,6 @@ createInertiaApp({
             .use(i18n)
             .mount(el);
     },
-    progress: {
-        color: '#4B5563',
-    },
+    // Barre d'Inertia désactivée (role="bar" invalide) : voir Layouts/partials/NavigationProgress.vue.
+    progress: false,
 });

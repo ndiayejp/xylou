@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Link, useForm } from '@inertiajs/vue3';
+import { Mail } from '@lucide/vue';
+import XButton from '@/Components/ui/XButton.vue';
+import XInput from '@/Components/ui/XInput.vue';
+import AuthLayout from '@/Layouts/AuthLayout.vue';
 
 defineProps<{
     status?: string;
@@ -20,43 +19,29 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Forgot Password" />
-
-        <div class="mb-4 text-sm text-gray-600">
-            Forgot your password? No problem. Just let us know your email address and we will email
-            you a password reset link that will allow you to choose a new one.
-        </div>
-
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
-            {{ status }}
-        </div>
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Email Password Reset Link
-                </PrimaryButton>
-            </div>
+    <AuthLayout
+        :title="$t('auth.forgot.title')"
+        :description="$t('auth.forgot.description')"
+        :status="status"
+    >
+        <form class="flex flex-col gap-5" novalidate @submit.prevent="submit">
+            <XInput
+                v-model="form.email"
+                type="email"
+                :label="$t('auth.fields.email')"
+                :icon="Mail"
+                :error="form.errors.email"
+                required
+                autofocus
+                autocomplete="username"
+            />
+            <XButton type="submit" size="lg" block :loading="form.processing">
+                {{ $t('auth.forgot.submit') }}
+            </XButton>
         </form>
-    </GuestLayout>
+
+        <template #footer>
+            <Link :href="route('login')" class="link">{{ $t('auth.forgot.back') }}</Link>
+        </template>
+    </AuthLayout>
 </template>

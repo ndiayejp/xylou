@@ -3,6 +3,7 @@ import { Link } from '@inertiajs/vue3';
 import XLogo from '@/Components/ui/XLogo.vue';
 import type { NavItem } from './navigation';
 import SkipLink from './partials/SkipLink.vue';
+import NavigationProgress from './partials/NavigationProgress.vue';
 import ToastRegion from './partials/ToastRegion.vue';
 
 // Tablette : rail à gauche. Mobile : barre en bas.
@@ -71,5 +72,6 @@ defineProps<{ nav: NavItem[]; homeHref: string }>();
         </nav>
 
         <ToastRegion />
+        <NavigationProgress />
     </div>
 </template>

@@ -19,9 +19,9 @@ export default defineConfigWithVueTs(
     pluginVue.configs['flat/recommended'],
     vueTsConfigs.recommended,
     {
-        // Composants Breeze encore utilisés par les pages d’authentification et de profil (étape 2)
+        // Composant Breeze encore utilisé par la page de profil
         rules: {
-            'vue/multi-word-component-names': ['error', { ignores: ['Checkbox', 'Modal'] }],
+            'vue/multi-word-component-names': ['error', { ignores: ['Modal'] }],
         },
     },
     {

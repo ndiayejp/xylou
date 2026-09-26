@@ -41,3 +41,24 @@ test('users can logout', function (): void {
     $this->assertGuest();
     $response->assertRedirect('/');
 });
+
+test('un échec de connexion est expliqué en français', function (): void {
+    $user = User::factory()->create();
+
+    $this->post('/login', ['email' => $user->email, 'password' => 'mauvais-mot-de-passe'])
+        ->assertSessionHasErrors(['email' => 'Ces identifiants ne correspondent pas à nos enregistrements.']);
+});
+
+test('la connexion est bloquée après 5 échecs', function (): void {
+    $user = User::factory()->create();
+
+    foreach (range(1, 5) as $attempt) {
+        $this->post('/login', ['email' => $user->email, 'password' => 'mauvais-mot-de-passe']);
+    }
+
+    $this->post('/login', ['email' => $user->email, 'password' => 'password'])
+        ->assertSessionHasErrors('email');
+
+    $this->assertGuest();
+    expect(session('errors')->first('email'))->toContain('Tentatives de connexion trop nombreuses');
+});
