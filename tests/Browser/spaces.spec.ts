@@ -73,6 +73,16 @@ test('session enfant : l’enfant reste dans son espace, le code parent l’en f
     page,
 }) => {
     await login(page, 'parent@example.com');
+    await expect(page).toHaveURL(/\/parent$/);
+
+    // État connu, quel que soit le PIN laissé sur la base locale : on définit le code parent 4821.
+    await page.goto('/settings/security');
+    await page.getByLabel('Nouveau code (4 à 6 chiffres)').fill('4821');
+    await page.getByLabel('Confirmez le code').fill('4821');
+    await page.getByRole('button', { name: 'Enregistrer le code' }).click();
+    await expect(page.getByText('Votre code parent est enregistré.')).toBeVisible();
+
+    await page.goto('/parent');
     await page.getByRole('button', { name: /^Ouvrir l’espace d/ }).click();
 
     await expect(page).toHaveURL(/\/enfant$/);
@@ -85,11 +95,12 @@ test('session enfant : l’enfant reste dans son espace, le code parent l’en f
 
     await page.getByRole('link', { name: 'Espace parent' }).click();
     await expect(page).toHaveURL(/\/enfant\/sortie$/);
-    await page.getByLabel('Mot de passe').fill('mauvais');
+    // Avec un PIN, le mot de passe ne suffit plus.
+    await page.getByLabel('Code parent').fill('password');
     await page.getByRole('button', { name: 'Revenir à l’espace parent' }).click();
     await expect(page.getByText('Ce code ne correspond pas.')).toBeVisible();
 
-    await page.getByLabel('Mot de passe').fill('password');
+    await page.getByLabel('Code parent').fill('4821');
     await page.getByRole('button', { name: 'Revenir à l’espace parent' }).click();
     await expect(page).toHaveURL(/\/parent$/);
 });

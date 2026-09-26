@@ -46,7 +46,7 @@ const menuId = useId();
                     class="hidden lg:block"
                 >
                     <ul class="flex gap-8 text-[15px] font-semibold">
-                        <li v-for="item in sections" :key="item.href">
+                        <li v-for="item in sections" :key="item.label">
                             <a :href="item.href" class="rounded-tag hover:text-primary-text">
                                 {{ $t(item.label) }}
                             </a>
@@ -87,7 +87,7 @@ const menuId = useId();
             >
                 <nav v-if="sections.length" :aria-label="$t('layout.sections')">
                     <ul class="flex flex-col">
-                        <li v-for="item in sections" :key="item.href">
+                        <li v-for="item in sections" :key="item.label">
                             <a
                                 :href="item.href"
                                 class="flex min-h-touch items-center rounded-input px-3 text-[15px] font-semibold hover:bg-bg"
@@ -141,10 +141,10 @@ const menuId = useId();
                 <nav v-for="group in footer" :key="group.title" :aria-label="$t(group.title)">
                     <p class="mb-2.5 text-[14px] font-extrabold">{{ $t(group.title) }}</p>
                     <ul class="flex flex-col gap-2.5">
-                        <li v-for="item in group.items" :key="item.href">
-                            <Link :href="item.href" class="text-[14px] text-muted hover:text-text">
+                        <li v-for="item in group.items" :key="item.label">
+                            <a :href="item.href" class="text-[14px] text-muted hover:text-text">
                                 {{ $t(item.label) }}
-                            </Link>
+                            </a>
                         </li>
                     </ul>
                 </nav>
