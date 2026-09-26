@@ -99,6 +99,7 @@ export const motion = {
 } as const;
 
 export const boxShadow = {
+    rest: '0 1px 2px rgba(32, 34, 56, .04), 0 8px 24px rgba(32, 34, 56, .06)',
     lift: '0 6px 16px rgba(91, 92, 226, .18)',
     card: '0 14px 32px rgba(32, 34, 56, .10)',
 } as const;

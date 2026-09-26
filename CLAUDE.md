@@ -81,7 +81,9 @@ npm run lint              # ESLint               · npm run lint:fix
 npm run format:check      # Prettier             · npm run format
 npm run typecheck         # vue-tsc --noEmit
 npm run test              # Vitest (resources/js/**/*.spec.ts)
+npx vitest run resources/js/Components/ui/__tests__/XButton.spec.ts   # un fichier Vitest
 npm run test:e2e          # Playwright + axe (tests/Browser) ; lance artisan serve, exige un build et une base migrée
+npx playwright test tests/Browser/login.spec.ts                       # un fichier E2E
 npm run build             # vue-tsc puis vite build
 npm run storybook         # catalogue des composants (http://localhost:6006) · npm run build-storybook
 ```
@@ -95,7 +97,7 @@ Avant de conclure une tâche : `composer lint && composer analyse && composer re
 - **Routes côté Vue :** helper Ziggy `route()` disponible partout (enregistré dans `app.ts`, typé dans `resources/js/types/global.d.ts`) — utiliser les routes nommées, jamais d'URL en dur.
 - **Routes :** `routes/web.php` (pages ; `dashboard` exige `auth` + `verified`) et `routes/auth.php` (auth Breeze), contrôleurs dans `app/Http/Controllers/Auth/`, validation dans `app/Http/Requests/`.
 - **Jetons de design :** source unique `resources/js/design/tokens.ts` (couleurs, matières, niveaux de maîtrise, typographie, rayons, mouvement), lue par `tailwind.config.ts` et vérifiée par `tokens.spec.ts` (contrastes AA, texte enfant ≥ 18 px). Classes : `bg-primary`, `text-primary-text`, `text-muted`, `bg-subject-maths-bg`, `bg-mastery-mastered-bar`, `text-h1`, `font-kid text-kid-body`, `rounded-card`, `rounded-kid-card`, `shadow-lift`, `duration-hover`, `animate-grow`… Polices auto-hébergées (`@fontsource-variable`), importées dans `app.css`, qui coupe aussi toutes les animations si `prefers-reduced-motion`.
-- **Composants `ui` (ADR 0009) :** `resources/js/Components/ui/X*.vue`, préfixe `X`, sans texte en dur (libellés en slot ou en prop), icônes Lucide passées en prop (`:icon="Check"`, toujours `aria-hidden`). Les composants ne connaissent pas le métier : un statut d’activité s’affiche avec `XTag` et un ton, la page choisit le libellé. Les champs passent par `XField` (libellé, aide, erreur, ids `aria-describedby`) et `field.ts` (classes communes). Chaque composant a sa story (`XNom.stories.ts`, à côté) et son test (`__tests__/XNom.spec.ts`) avec `expectNoAxeViolations` de `@/test/axe`.
+- **Composants `ui` (ADR 0009) :** `resources/js/Components/ui/X*.vue`, préfixe `X`, sans texte en dur (libellés en slot ou en prop), icônes Lucide passées en prop (`:icon="Check"`, toujours `aria-hidden`). Les composants ne connaissent pas le métier : un statut d’activité s’affiche avec `XTag` et un ton, la page choisit le libellé. Les champs passent par `XField` (libellé, aide, erreur, ids `aria-describedby`) et `field.ts` (classes communes). Chaque composant est couvert par une story (`*.stories.ts` à côté, parfois regroupée par famille : `XFormFields.stories.ts`, `XTags.stories.ts`) et par un test dans `__tests__/` (même regroupement possible, ex. `XTags.spec.ts`) qui appelle `expectNoAxeViolations` de `@/test/axe`.
 - **Front :** layouts `Layouts/AuthenticatedLayout.vue` et `Layouts/GuestLayout.vue`, composants Breeze dans `resources/js/Components/`, alias `@/` → `resources/js/`. Vue racine unique : `resources/views/app.blade.php`.
 - **Utilisateur connecté :** l'injecter avec `#[CurrentUser] User $user` plutôt que `$request->user()` (non nullable pour Larastan).
 - **Tests :** `tests/Pest.php` applique `Tests\TestCase` + `RefreshDatabase` à `tests/Feature` ; les tests Unit ne démarrent pas le framework ; `tests/Architecture` contient les règles `arch()` (à enrichir à chaque nouveau domaine).
