@@ -6,6 +6,9 @@ use App\Domain\Identity\Enums\Role;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Kid\ExitController;
 use App\Http\Controllers\Kid\HomeController as KidHomeController;
+use App\Http\Controllers\Onboarding\ChildStepController;
+use App\Http\Controllers\Onboarding\StartController as OnboardingStartController;
+use App\Http\Controllers\Onboarding\StepController as OnboardingStepController;
 use App\Http\Controllers\Parent\CurrentChildController;
 use App\Http\Controllers\Parent\DashboardController as ParentDashboardController;
 use App\Http\Controllers\Parent\KidSessionController;
@@ -29,7 +32,23 @@ foreach ([
     Route::get($uri, LegalController::class)->defaults('page', $page)->name('legal.'.$page);
 }
 
-Route::get('/dashboard', HomeController::class)->middleware(['auth', 'verified'])->name('dashboard');
+// Pas de « verified » ici : HomeController reprend d'abord un onboarding en cours.
+Route::get('/dashboard', HomeController::class)->middleware('auth')->name('dashboard');
+
+// Onboarding (écrans 2 à 7) : parent connecté, adresse pas encore forcément vérifiée.
+Route::middleware(['auth', 'role:'.Role::Parent->value])
+    ->prefix('onboarding')
+    ->name('onboarding.')
+    ->whereNumber('onboarding')
+    ->group(function (): void {
+        Route::post('/', OnboardingStartController::class)->name('start');
+        Route::get('{onboarding}/enfant', [ChildStepController::class, 'show'])->name('child');
+        Route::put('{onboarding}/enfant', [ChildStepController::class, 'update'])->name('child.update');
+        Route::get('{onboarding}/etape/{step}', [OnboardingStepController::class, 'show'])
+            ->whereNumber('step')->name('step');
+        Route::post('{onboarding}/etape/{step}', [OnboardingStepController::class, 'store'])
+            ->whereNumber('step')->name('step.next');
+    });
 
 Route::middleware(['auth', 'verified', 'role:'.Role::Parent->value])
     ->prefix('parent')

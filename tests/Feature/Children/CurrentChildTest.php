@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Domain\Children\Actions\CreateChildProfile;
+use App\Domain\Children\Data\ChildProfileInput;
 use App\Domain\Children\Enums\Grade;
 use App\Domain\Children\Models\ChildProfile;
 use App\Domain\Identity\Models\User;
@@ -79,7 +80,7 @@ test('un pro ne reçoit aucune donnée d’enfant partagée', function (): void 
 test('CreateChildProfile rattache l’enfant à son parent', function (): void {
     $parent = User::factory()->parent()->create();
 
-    $child = resolve(CreateChildProfile::class)($parent, 'Inès', Grade::Cm1, 2016);
+    $child = resolve(CreateChildProfile::class)($parent, new ChildProfileInput('Inès', Grade::Cm1, 2016));
 
     expect($child->fresh())
         ->first_name->toBe('Inès')
