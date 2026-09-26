@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Auth;
 
 use App\Domain\Identity\Models\User;
+use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -50,6 +51,8 @@ class LoginRequest extends FormRequest
         $user = $provider->retrieveByCredentials($credentials);
 
         if (! $user instanceof User || ! $provider->validateCredentials($user, $credentials)) {
+            // Même événement qu'Auth::attempt() (journal d'audit), sans ouvrir de session.
+            event(new Failed('web', $user, $credentials));
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

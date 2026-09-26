@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 /**
  * @property int $id
@@ -34,11 +36,17 @@ class ChildProfile extends Model implements AuthenticatableContract
     use Authenticatable;
 
     /** @use HasFactory<ChildProfileFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory, LogsActivity, SoftDeletes;
 
     public function getRememberTokenName(): string
     {
         return '';
+    }
+
+    // Journal « children » : création, modification, suppression, sans aucune valeur de champ (§11.4).
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->useLogName('children');
     }
 
     protected $fillable = ['first_name', 'birth_year', 'grade'];

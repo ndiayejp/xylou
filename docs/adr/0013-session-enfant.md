@@ -26,3 +26,7 @@ L'enfant n'a ni compte ni e-mail (§7.1). Le parent ouvre l'espace de son enfant
 - Garder la session parent ouverte et filtrer les routes parent : plus simple, mais une seule route oubliée suffirait à exposer l'espace parent.
 - Compte enfant avec mot de passe : contraire à la minimisation (§11.1) et à l'usage à la maison.
 - Code image (l'enfant ouvre lui-même sa session avec 3 pictos) : prévu en option, traité séparément.
+
+## Complément — code image (décision du 2026-09-26)
+
+Le code image est reporté à l'étape 6 (expérience enfant). Il ne fonctionnera que sur un **appareil autorisé par le parent** : sur cet appareil, un écran propose les enfants de la famille ; l'enfant touche son avatar puis ses 3 pictos. Ailleurs, il est refusé (un code à 3 pictos serait devinable depuis Internet).

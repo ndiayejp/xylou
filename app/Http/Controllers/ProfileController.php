@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Domain\Identity\Events\AccountDeleted;
 use App\Domain\Identity\Models\User;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Container\Attributes\CurrentUser;
@@ -53,6 +54,7 @@ class ProfileController extends Controller
             'password' => ['required', 'current_password'],
         ]);
 
+        event(new AccountDeleted($user->id));
         Auth::logout();
 
         $user->delete();

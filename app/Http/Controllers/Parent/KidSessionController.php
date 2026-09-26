@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Parent;
 
 use App\Domain\Children\Models\ChildProfile;
+use App\Domain\Identity\Events\KidSessionOpened;
 use App\Domain\Identity\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Container\Attributes\CurrentUser;
@@ -27,6 +28,7 @@ final class KidSessionController extends Controller
         $request->session()->regenerate();
         Auth::guard('kid')->login($child);
         $request->session()->put(self::PARENT_KEY, $parent->id);
+        event(new KidSessionOpened($parent, $child));
 
         return to_route('kid.home');
     }

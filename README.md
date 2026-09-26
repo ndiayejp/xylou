@@ -81,4 +81,5 @@ La CI (`.github/workflows/ci.yml`) lance toutes ces vérifications à chaque pul
 | `laravel-lang/common` (dev) | Fournit les traductions françaises de Laravel (`lang/fr`) sans les maintenir à la main. Paquet de référence, très utilisé et maintenu. | MIT |
 | `driftingly/rector-laravel` (dev) | Règles Rector propres à Laravel, pour les montées de version. Extension de référence pour Laravel, référencée dans la documentation de Rector. | MIT |
 | `@lucide/vue` | Icônes des composants, dans le style de la maquette (trait 2 px, bouts arrondis). Bibliothèque d'icônes très utilisée et maintenue ; seules les icônes importées sont embarquées. Voir l'[ADR 0009](docs/adr/0009-storybook-et-icones-lucide.md). | ISC |
+| `laravel/fortify` | Double authentification (TOTP, codes de secours), seule fonctionnalité activée ; paquet officiel Laravel. Il impose `laravel/passkeys` (non activé). Voir l’[ADR 0012](docs/adr/0012-fortify-pour-la-2fa.md). | MIT |
 | `axe-core` (dev) | Contrôle d'accessibilité dans les tests Vitest des composants. Moteur de référence, déjà utilisé par `@axe-core/playwright` et l'addon a11y de Storybook. | MPL-2.0 |
