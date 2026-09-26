@@ -1,10 +1,12 @@
 // Messages de l'interface (vue-i18n). Les messages du serveur restent dans lang/fr.
 import landing from './fr/landing';
 import legal from './fr/legal';
+import onboarding from './fr/onboarding';
 
 export default {
     landing,
     legal,
+    onboarding,
     layout: {
         skipToContent: 'Aller au contenu',
         mainNav: 'Navigation principale',
@@ -72,6 +74,7 @@ export default {
             title: 'Bonjour {name}',
             emptyTitle: 'Ajoutez votre premier enfant',
             emptyText: 'Son espace, ses activités et sa progression apparaîtront ici.',
+            addFirstChild: 'Décrire mon enfant',
         },
     },
     pro: {

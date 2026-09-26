@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, router, usePage } from '@inertiajs/vue3';
-import { CalendarDays, DoorOpen, Users } from '@lucide/vue';
+import { CalendarDays, DoorOpen, UserPlus, Users } from '@lucide/vue';
 import { ref } from 'vue';
 import XButton from '@/Components/ui/XButton.vue';
 import XCard from '@/Components/ui/XCard.vue';
@@ -72,7 +72,13 @@ function openKidSpace(childId: number): void {
                 :icon="Users"
                 :title="$t('parent.dashboard.emptyTitle')"
                 :description="$t('parent.dashboard.emptyText')"
-            />
+            >
+                <template #actions>
+                    <XButton :icon="UserPlus" @click="router.post(route('onboarding.start'))">
+                        {{ $t('parent.dashboard.addFirstChild') }}
+                    </XButton>
+                </template>
+            </XEmptyState>
         </XCard>
     </ParentSpace>
 </template>

@@ -1,6 +1,7 @@
 import { Eye, Hand, Headphones, Mail, Search } from '@lucide/vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
+import XCheckbox from './XCheckbox.vue';
 import XInput from './XInput.vue';
 import XSegmented from './XSegmented.vue';
 import XSelect from './XSelect.vue';
@@ -75,6 +76,21 @@ export const Interrupteurs: Story = {
                 <XToggle v-model="on" label="Rappel doux" hint="Une notification calme, une fois par jour" />
                 <XToggle v-model="off" label="Mode calme" />
                 <XToggle label="Désactivé" disabled />
+            </div>`,
+    }),
+};
+
+export const CasesACocher: Story = {
+    name: 'Cases à cocher',
+    render: () => ({
+        components: { XCheckbox },
+        setup: () => ({ accepted: ref(true), terms: ref(false) }),
+        template: `
+            <div class="flex max-w-md flex-col gap-4">
+                <XCheckbox v-model="accepted">Je suis le parent ou le responsable légal de l’enfant.</XCheckbox>
+                <XCheckbox v-model="terms">J’accepte les <a class="link" href="#">conditions d’utilisation</a>.</XCheckbox>
+                <XCheckbox error="Ce consentement est nécessaire pour continuer.">Case en erreur</XCheckbox>
+                <XCheckbox disabled>Désactivée</XCheckbox>
             </div>`,
     }),
 };

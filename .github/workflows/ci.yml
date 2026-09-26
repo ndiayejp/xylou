@@ -116,6 +116,8 @@ jobs:
           --health-interval 5s --health-timeout 5s --health-retries 10
     env:
       DB_PORT: 5432
+      # Pas de Mailpit en CI : le mail de vérification (inscription) part dans les logs.
+      MAIL_MAILER: log
     steps:
       - uses: actions/checkout@v5
       - uses: shivammathur/setup-php@v2

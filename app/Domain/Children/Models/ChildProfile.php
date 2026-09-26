@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Children\Models;
 
+use App\Domain\Children\Enums\AvatarKey;
 use App\Domain\Children\Enums\Grade;
 use App\Domain\Children\Policies\ChildProfilePolicy;
 use App\Domain\Identity\Models\User;
@@ -27,6 +28,9 @@ use Spatie\Activitylog\Support\LogOptions;
  * @property string $first_name
  * @property int|null $birth_year
  * @property Grade $grade
+ * @property string $language
+ * @property AvatarKey|null $avatar_key
+ * @property array<string, bool>|null $comfort_settings
  */
 #[UseFactory(ChildProfileFactory::class)]
 #[UsePolicy(ChildProfilePolicy::class)]
@@ -49,14 +53,22 @@ class ChildProfile extends Model implements AuthenticatableContract
         return LogOptions::defaults()->useLogName('children');
     }
 
-    protected $fillable = ['first_name', 'birth_year', 'grade'];
+    protected $fillable = ['first_name', 'birth_year', 'grade', 'language', 'avatar_key', 'comfort_settings'];
 
     protected function casts(): array
     {
         return [
             'birth_year' => 'integer',
             'grade' => Grade::class,
+            'avatar_key' => AvatarKey::class,
+            'comfort_settings' => 'array',
         ];
+    }
+
+    // Options de confort (lecture à voix haute, police lisible, sans chronomètre), désactivées par défaut.
+    public function comfort(string $option): bool
+    {
+        return (bool) ($this->comfort_settings[$option] ?? false);
     }
 
     /** @return BelongsTo<User, $this> */

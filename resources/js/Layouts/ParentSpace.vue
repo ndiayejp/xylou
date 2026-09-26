@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { usePage } from '@inertiajs/vue3';
+import { router, usePage } from '@inertiajs/vue3';
 import { useChildren } from '@/Composables/useChildren';
 import { useParentNavigation } from '@/Composables/useSpaceNavigation';
 import ParentLayout from './ParentLayout.vue';
@@ -16,7 +16,9 @@ const { switcherItems, currentChildId, switchTo } = useChildren();
         :user="{ name: user.name }"
         :children="switcherItems"
         :current-child-id="currentChildId"
+        can-add-child
         @switch-child="switchTo"
+        @add-child="router.post(route('onboarding.start'))"
     >
         <template #header><slot name="header" /></template>
         <template #actions><slot name="actions" /></template>
