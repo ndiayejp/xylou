@@ -94,13 +94,34 @@ test('onboarding : compte, profil de l’enfant, retour sans perte, jusqu’à l
     await expectNoSeriousViolations(page);
     await page.getByRole('button', { name: 'Continuer' }).click();
 
-    for (const step of [5, 6, 7]) {
-        await expect(page.getByRole('progressbar')).toHaveAttribute(
-            'aria-valuetext',
-            `Étape ${step} sur 7`,
-        );
-        await page.getByRole('button', { name: 'Continuer' }).click();
-    }
+    // Écran 5 : difficultés par matière, observation privée.
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Sur quoi aider Lucas ?');
+    await page.getByRole('button', { name: 'Fractions' }).click();
+    await page.getByRole('radio', { name: 'Français' }).click();
+    await page.getByRole('button', { name: 'Orthographe', exact: true }).click();
+    await expect(page.getByText('2 difficultés sélectionnées')).toBeVisible();
+    await page.getByLabel('Ce que vous observez').fill('Se perd quand l’énoncé est long.');
+    await expectNoSeriousViolations(page);
+    await page.getByRole('button', { name: 'Continuer' }).click();
+
+    // Écran 6 : préférences, puis retour à l'écran 5 sans perte.
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+        'Ce qui aide Lucas à apprendre',
+    );
+    await page.getByRole('contentinfo').getByRole('link', { name: 'Retour' }).click();
+    await expect(page.getByLabel('Ce que vous observez')).toHaveValue(
+        'Se perd quand l’énoncé est long.',
+    );
+    await page.getByRole('button', { name: 'Continuer' }).click();
+
+    await page.getByRole('button', { name: /Visuel/ }).click();
+    await page.getByRole('radio', { name: '15 min' }).click();
+    await page.getByRole('switch', { name: 'Rappel doux' }).click();
+    await expectNoSeriousViolations(page);
+    await page.getByRole('button', { name: 'Voir le résumé' }).click();
+
+    await expect(page.getByRole('progressbar')).toHaveAttribute('aria-valuetext', 'Étape 7 sur 7');
+    await page.getByRole('button', { name: 'Continuer' }).click();
 
     // Fin : l'espace parent exige l'adresse vérifiée.
     await expect(page).toHaveURL(/\/verify-email$/);

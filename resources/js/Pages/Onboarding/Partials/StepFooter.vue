@@ -3,8 +3,11 @@ import { Link } from '@inertiajs/vue3';
 import { ArrowLeft, ArrowRight } from '@lucide/vue';
 import XButton from '@/Components/ui/XButton.vue';
 
-// Pied de page des écrans de l'onboarding : Retour (lien) et Continuer (envoie le formulaire).
-defineProps<{ backHref?: string; form: string; processing: boolean }>();
+// Pied de page des écrans de l'onboarding : Retour (lien), action secondaire (slot), Continuer (envoi).
+withDefaults(
+    defineProps<{ backHref?: string; form: string; processing: boolean; submitLabel?: string }>(),
+    { backHref: undefined, submitLabel: undefined },
+);
 </script>
 
 <template>
@@ -17,8 +20,11 @@ defineProps<{ backHref?: string; form: string; processing: boolean }>();
         {{ $t('onboarding.back') }}
     </Link>
     <span v-else />
-    <XButton type="submit" :form="form" size="lg" :loading="processing">
-        {{ $t('onboarding.continue') }}
-        <ArrowRight :size="20" aria-hidden="true" />
-    </XButton>
+    <div class="flex flex-wrap items-center gap-5">
+        <slot name="secondary" />
+        <XButton type="submit" :form="form" size="lg" :loading="processing">
+            {{ submitLabel ?? $t('onboarding.continue') }}
+            <ArrowRight :size="20" aria-hidden="true" />
+        </XButton>
+    </div>
 </template>

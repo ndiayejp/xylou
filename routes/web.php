@@ -7,8 +7,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Kid\ExitController;
 use App\Http\Controllers\Kid\HomeController as KidHomeController;
 use App\Http\Controllers\Onboarding\ChildStepController;
+use App\Http\Controllers\Onboarding\DifficultiesStepController;
 use App\Http\Controllers\Onboarding\GoalsStepController;
 use App\Http\Controllers\Onboarding\InterestsStepController;
+use App\Http\Controllers\Onboarding\PreferencesStepController;
 use App\Http\Controllers\Onboarding\StartController as OnboardingStartController;
 use App\Http\Controllers\Onboarding\StepController as OnboardingStepController;
 use App\Http\Controllers\Parent\CurrentChildController;
@@ -50,6 +52,10 @@ Route::middleware(['auth', 'role:'.Role::Parent->value])
         Route::put('{onboarding}/univers', [InterestsStepController::class, 'update'])->name('interests.update');
         Route::get('{onboarding}/objectifs', [GoalsStepController::class, 'show'])->name('goals');
         Route::put('{onboarding}/objectifs', [GoalsStepController::class, 'update'])->name('goals.update');
+        Route::get('{onboarding}/difficultes', [DifficultiesStepController::class, 'show'])->name('difficulties');
+        Route::put('{onboarding}/difficultes', [DifficultiesStepController::class, 'update'])->name('difficulties.update');
+        Route::get('{onboarding}/preferences', [PreferencesStepController::class, 'show'])->name('preferences');
+        Route::put('{onboarding}/preferences', [PreferencesStepController::class, 'update'])->name('preferences.update');
         Route::get('{onboarding}/etape/{step}', [OnboardingStepController::class, 'show'])
             ->whereNumber('step')->name('step');
         Route::post('{onboarding}/etape/{step}', [OnboardingStepController::class, 'store'])

@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
@@ -33,6 +34,7 @@ use Spatie\Activitylog\Support\LogOptions;
  * @property string $language
  * @property AvatarKey|null $avatar_key
  * @property array<string, bool>|null $comfort_settings
+ * @property string|null $difficulty_observation
  */
 #[UseFactory(ChildProfileFactory::class)]
 #[UsePolicy(ChildProfilePolicy::class)]
@@ -64,6 +66,8 @@ class ChildProfile extends Model implements AuthenticatableContract
             'grade' => Grade::class,
             'avatar_key' => AvatarKey::class,
             'comfort_settings' => 'array',
+            // Observation du parent (écran 5) : jamais montrée à l'enfant ni envoyée à l'IA.
+            'difficulty_observation' => 'encrypted',
         ];
     }
 
@@ -83,6 +87,18 @@ class ChildProfile extends Model implements AuthenticatableContract
     public function customInterests(): HasMany
     {
         return $this->hasMany(CustomInterest::class)->orderBy('id');
+    }
+
+    /** @return HasMany<ChildDifficulty, $this> */
+    public function difficulties(): HasMany
+    {
+        return $this->hasMany(ChildDifficulty::class)->orderBy('id');
+    }
+
+    /** @return HasOne<LearningPreferences, $this> */
+    public function learningPreferences(): HasOne
+    {
+        return $this->hasOne(LearningPreferences::class);
     }
 
     /** @return HasMany<ChildGoal, $this> */

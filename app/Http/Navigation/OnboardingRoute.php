@@ -15,6 +15,8 @@ final class OnboardingRoute
         2 => 'onboarding.child',
         3 => 'onboarding.interests',
         4 => 'onboarding.goals',
+        5 => 'onboarding.difficulties',
+        6 => 'onboarding.preferences',
     ];
 
     public static function for(Onboarding $onboarding, int $step): string

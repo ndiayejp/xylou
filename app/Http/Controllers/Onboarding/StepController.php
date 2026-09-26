@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
-// Écrans pas encore construits (5 à 7). Provisoire : un écran d'attente, remplacé dans les PR suivantes.
+// Écran pas encore construit (7). Provisoire : un écran d'attente, remplacé dans les PR suivantes.
 final class StepController extends Controller
 {
     public function show(Onboarding $onboarding, int $step): Response|RedirectResponse
