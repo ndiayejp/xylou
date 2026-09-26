@@ -10,7 +10,7 @@ import {
     User,
     Users,
 } from '@lucide/vue';
-import type { LayoutAction, NavItem } from '../navigation';
+import type { AccountLink, LayoutAction, NavItem } from '../navigation';
 
 export const kidNav: NavItem[] = [
     { label: 'nav.kid.home', href: '/enfant', icon: House, current: true },
@@ -44,3 +44,8 @@ export const children = [
 // jsdom n'applique pas le CSS : rail et barre mobile (même libellé, un seul visible à la fois)
 // paraissent présents ensemble. Playwright et Storybook vérifient ces repères au vrai rendu.
 export const RESPONSIVE_DUPLICATES = ['landmark-unique'];
+
+export const accountLinks: AccountLink[] = [
+    { label: 'layout.profile', href: '/profile' },
+    { label: 'layout.logout', href: '/logout', method: 'post' },
+];

@@ -16,8 +16,10 @@ arch('aucune fonction PHP à éviter')
 arch('aucune fonction PHP dangereuse')
     ->preset()->security();
 
+// Les domaines rangent eux-mêmes leurs Models, Enums, Actions… (ADR 0002).
 arch('conventions Laravel')
-    ->preset()->laravel();
+    ->preset()->laravel()
+    ->ignoring('App\Domain');
 
 arch('les domaines ne dépendent pas de la couche HTTP')
     ->expect('App\Domain')

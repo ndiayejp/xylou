@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Models\User;
+use App\Domain\Identity\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 test('password can be updated', function (): void {

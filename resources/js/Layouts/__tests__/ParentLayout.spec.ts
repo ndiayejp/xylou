@@ -2,7 +2,13 @@ import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '@/test/axe';
 import ParentLayout from '../ParentLayout.vue';
-import { adultNav, children, generateAction, RESPONSIVE_DUPLICATES } from './fixtures';
+import {
+    accountLinks,
+    adultNav,
+    children,
+    generateAction,
+    RESPONSIVE_DUPLICATES,
+} from './fixtures';
 
 function mountLayout(props = {}) {
     return mount(ParentLayout, {
@@ -16,6 +22,7 @@ function mountLayout(props = {}) {
             unreadNotifications: 3,
             action: generateAction,
             helpHref: '/aide',
+            accountLinks,
             ...props,
         },
         slots: { header: '<h1>Bonjour Sophie</h1>', default: '<p>Contenu</p>' },
@@ -103,5 +110,34 @@ describe('ParentLayout', () => {
 
         expect(more?.attributes('aria-expanded')).toBe('true');
         expect(bar?.text()).toContain('Bibliothèque');
+    });
+
+    it('menu de compte : profil et déconnexion en POST', async () => {
+        const wrapper = mountLayout();
+        const trigger = wrapper.get('button[aria-label="Mon compte"]');
+
+        await trigger.trigger('click');
+
+        const menu = wrapper.get(`#${trigger.attributes('aria-controls')}`);
+
+        expect(trigger.attributes('aria-expanded')).toBe('true');
+        expect(menu.get('a[href="/profile"]').text()).toBe('Mon profil');
+        // Déconnexion : un bouton (POST), pas un lien.
+        expect(menu.get('button').text()).toBe('Se déconnecter');
+    });
+
+    it('sans lien de notifications, pas de cloche', () => {
+        const wrapper = mountLayout({ notificationsHref: undefined });
+
+        expect(wrapper.find('a[aria-label^="Notifications"]').exists()).toBe(false);
+    });
+
+    it('mobile : le compte est accessible depuis « Plus »', async () => {
+        const wrapper = mountLayout();
+        const bar = wrapper.findAll('nav').at(-1);
+
+        await bar?.get('button[aria-expanded]').trigger('click');
+
+        expect(bar?.text()).toContain('Se déconnecter');
     });
 });

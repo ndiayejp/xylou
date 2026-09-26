@@ -2,9 +2,10 @@
 import { Link } from '@inertiajs/vue3';
 import { CircleHelp, Menu, X } from '@lucide/vue';
 import { ref, useId } from 'vue';
-import XAvatar from '@/Components/ui/XAvatar.vue';
 import XLogo from '@/Components/ui/XLogo.vue';
-import type { LayoutAction, LayoutUser, NavItem } from './navigation';
+import type { AccountLink, LayoutAction, LayoutUser, NavItem } from './navigation';
+import AccountLinkList from './partials/AccountLinkList.vue';
+import AccountMenu from './partials/AccountMenu.vue';
 import NotificationsLink from './partials/NotificationsLink.vue';
 import SideNav from './partials/SideNav.vue';
 import SkipLink from './partials/SkipLink.vue';
@@ -17,16 +18,19 @@ withDefaults(
         homeHref: string;
         user: LayoutUser;
         userDetails?: string;
-        notificationsHref: string;
+        notificationsHref?: string;
         unreadNotifications?: number;
         action?: LayoutAction;
         helpHref?: string;
+        accountLinks?: AccountLink[];
     }>(),
     {
         userDetails: undefined,
+        notificationsHref: undefined,
         unreadNotifications: 0,
         action: undefined,
         helpHref: undefined,
+        accountLinks: () => [],
     },
 );
 
@@ -93,7 +97,11 @@ const menuId = useId();
                     </span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <NotificationsLink :href="notificationsHref" :unread="unreadNotifications" />
+                    <NotificationsLink
+                        v-if="notificationsHref"
+                        :href="notificationsHref"
+                        :unread="unreadNotifications"
+                    />
                     <button
                         type="button"
                         :aria-expanded="menuOpen"
@@ -121,6 +129,9 @@ const menuId = useId();
                     <component :is="action.icon" :size="19" aria-hidden="true" />
                     {{ $t(action.label) }}
                 </Link>
+                <div v-if="accountLinks.length" class="border-t border-line pt-2">
+                    <AccountLinkList :links="accountLinks" @navigate="menuOpen = false" />
+                </div>
             </nav>
         </header>
 
@@ -129,8 +140,12 @@ const menuId = useId();
                 <div class="min-w-0"><slot name="header" /></div>
                 <div class="hidden shrink-0 items-center gap-3 lg:flex">
                     <slot name="actions" />
-                    <NotificationsLink :href="notificationsHref" :unread="unreadNotifications" />
-                    <XAvatar :name="user.name" :color="user.color" />
+                    <NotificationsLink
+                        v-if="notificationsHref"
+                        :href="notificationsHref"
+                        :unread="unreadNotifications"
+                    />
+                    <AccountMenu :user="user" :links="accountLinks" />
                 </div>
             </div>
             <main id="contenu" class="min-w-0 grow px-4 pb-10 pt-5 md:px-6 lg:px-10">

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Head } from '@inertiajs/vue3';
+import XCard from '@/Components/ui/XCard.vue';
+import AccountSpace from '@/Layouts/AccountSpace.vue';
 import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
-import { Head } from '@inertiajs/vue3';
 
 defineProps<{
     mustVerifyEmail?: boolean;
@@ -12,31 +13,27 @@ defineProps<{
 </script>
 
 <template>
-    <Head title="Profile" />
+    <Head :title="$t('profile.title')" />
 
-    <AuthenticatedLayout>
+    <AccountSpace>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">Profile</h2>
+            <h1 class="text-h2 md:text-h1">{{ $t('profile.title') }}</h1>
         </template>
 
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <UpdateProfileInformationForm
-                        :must-verify-email="mustVerifyEmail"
-                        :status="status"
-                        class="max-w-xl"
-                    />
-                </div>
-
-                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <UpdatePasswordForm class="max-w-xl" />
-                </div>
-
-                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                    <DeleteUserForm class="max-w-xl" />
-                </div>
-            </div>
+        <div class="flex max-w-3xl flex-col gap-6">
+            <XCard padding="lg">
+                <UpdateProfileInformationForm
+                    :must-verify-email="mustVerifyEmail"
+                    :status="status"
+                    class="max-w-xl"
+                />
+            </XCard>
+            <XCard padding="lg">
+                <UpdatePasswordForm class="max-w-xl" />
+            </XCard>
+            <XCard padding="lg">
+                <DeleteUserForm class="max-w-xl" />
+            </XCard>
         </div>
-    </AuthenticatedLayout>
+    </AccountSpace>
 </template>

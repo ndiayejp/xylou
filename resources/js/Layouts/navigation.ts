@@ -19,6 +19,12 @@ export interface LayoutUser {
     color?: XAvatarColor;
 }
 
+export interface AccountLink {
+    label: string;
+    href: string;
+    method?: 'get' | 'post';
+}
+
 export interface LayoutAction {
     label: string;
     href: string;

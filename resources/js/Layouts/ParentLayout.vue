@@ -2,10 +2,11 @@
 import { Link } from '@inertiajs/vue3';
 import { CircleHelp, Ellipsis } from '@lucide/vue';
 import { computed, ref, useId } from 'vue';
-import XAvatar from '@/Components/ui/XAvatar.vue';
 import type { XChildSwitcherItem } from '@/Components/ui/XChildSwitcher.vue';
 import XLogo from '@/Components/ui/XLogo.vue';
-import type { LayoutAction, LayoutUser, NavItem } from './navigation';
+import type { AccountLink, LayoutAction, LayoutUser, NavItem } from './navigation';
+import AccountLinkList from './partials/AccountLinkList.vue';
+import AccountMenu from './partials/AccountMenu.vue';
 import ChildMenu from './partials/ChildMenu.vue';
 import NotificationsLink from './partials/NotificationsLink.vue';
 import SideNav from './partials/SideNav.vue';
@@ -20,18 +21,21 @@ const props = withDefaults(
         user: LayoutUser;
         children: XChildSwitcherItem[];
         currentChildId?: string | number;
-        notificationsHref: string;
+        notificationsHref?: string;
         unreadNotifications?: number;
         action?: LayoutAction;
         helpHref?: string;
         canAddChild?: boolean;
+        accountLinks?: AccountLink[];
     }>(),
     {
         currentChildId: undefined,
+        notificationsHref: undefined,
         unreadNotifications: 0,
         action: undefined,
         helpHref: undefined,
         canAddChild: false,
+        accountLinks: () => [],
     },
 );
 
@@ -145,7 +149,11 @@ const moreId = useId();
                         @switch="$emit('switchChild', $event)"
                         @add="$emit('addChild')"
                     />
-                    <NotificationsLink :href="notificationsHref" :unread="unreadNotifications" />
+                    <NotificationsLink
+                        v-if="notificationsHref"
+                        :href="notificationsHref"
+                        :unread="unreadNotifications"
+                    />
                 </div>
             </header>
 
@@ -156,8 +164,12 @@ const moreId = useId();
                 <div class="min-w-0"><slot name="header" /></div>
                 <div class="flex shrink-0 items-center gap-3">
                     <slot name="actions" />
-                    <NotificationsLink :href="notificationsHref" :unread="unreadNotifications" />
-                    <XAvatar :name="user.name" :color="user.color" />
+                    <NotificationsLink
+                        v-if="notificationsHref"
+                        :href="notificationsHref"
+                        :unread="unreadNotifications"
+                    />
+                    <AccountMenu :user="user" :links="accountLinks" />
                 </div>
             </div>
 
@@ -185,6 +197,9 @@ const moreId = useId();
                     <CircleHelp :size="20" aria-hidden="true" />
                     {{ $t('layout.help') }}
                 </Link>
+                <div v-if="accountLinks.length" class="mt-1 border-t border-line pt-1">
+                    <AccountLinkList :links="accountLinks" @navigate="moreOpen = false" />
+                </div>
             </div>
             <ul class="flex">
                 <li v-for="item in mobileNav" :key="item.href" class="grow basis-0">
@@ -198,7 +213,7 @@ const moreId = useId();
                         {{ $t(item.label) }}
                     </Link>
                 </li>
-                <li v-if="moreNav.length || helpHref" class="grow basis-0">
+                <li v-if="moreNav.length || helpHref || accountLinks.length" class="grow basis-0">
                     <button
                         type="button"
                         :aria-expanded="moreOpen"
