@@ -83,6 +83,18 @@ describe('ParentLayout', () => {
         expect(trigger.attributes('aria-expanded')).toBe('false');
     });
 
+    it('choisir l’enfant déjà sélectionné referme le menu sans rien émettre', async () => {
+        const wrapper = mountLayout();
+        const trigger = wrapper.get('button[aria-label="Changer d’enfant, actuellement Emma"]');
+
+        await trigger.trigger('click');
+        const emma = wrapper.findAll('li button').find((button) => button.text().includes('Emma'));
+        await emma?.trigger('click');
+
+        expect(trigger.attributes('aria-expanded')).toBe('false');
+        expect(wrapper.emitted('switchChild')).toBeUndefined();
+    });
+
     it('ferme le menu d’enfant avec Échap', async () => {
         const wrapper = mountLayout();
         const trigger = wrapper.findAll('button[aria-expanded]')[0];

@@ -50,4 +50,15 @@ describe('XChildSwitcher', () => {
         expect(add?.text()).toBe('Ajouter un enfant');
         expect(withAdd.emitted('add')).toHaveLength(1);
     });
+
+    it('émet select à chaque choix, même pour l’enfant déjà sélectionné', async () => {
+        const wrapper = mount(XChildSwitcher, {
+            props: { items, label: 'Changer d’enfant', modelValue: 1 },
+        });
+
+        await wrapper.findAll('li button')[0]?.trigger('click');
+
+        expect(wrapper.emitted('select')).toEqual([[1]]);
+        expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+    });
 });

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Domain\Identity\Enums\Role;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Parent\CurrentChildController;
 use App\Http\Controllers\Parent\DashboardController as ParentDashboardController;
 use App\Http\Controllers\Pro\DashboardController as ProDashboardController;
 use App\Http\Controllers\ProfileController;
@@ -25,6 +26,7 @@ Route::middleware(['auth', 'verified', 'role:'.Role::Parent->value])
     ->name('parent.')
     ->group(function (): void {
         Route::get('/', ParentDashboardController::class)->name('dashboard');
+        Route::post('current-child', CurrentChildController::class)->name('current-child');
     });
 
 Route::middleware(['auth', 'verified', 'role:'.Role::Professional->value, 'two-factor.required'])

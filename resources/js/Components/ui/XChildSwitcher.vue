@@ -14,7 +14,13 @@ defineProps<{ items: XChildSwitcherItem[]; label: string; addLabel?: string }>()
 
 const model = defineModel<string | number>();
 
-defineEmits<{ add: [] }>();
+// select : émis à chaque choix, même de l'enfant déjà sélectionné (pour refermer un menu).
+const emit = defineEmits<{ add: []; select: [id: string | number] }>();
+
+function choose(id: string | number): void {
+    model.value = id;
+    emit('select', id);
+}
 
 const labelId = useId();
 
@@ -38,7 +44,7 @@ const itemClass =
                     type="button"
                     :aria-pressed="model === child.id"
                     :class="[itemClass, model === child.id ? 'bg-tint' : 'hover:bg-bg']"
-                    @click="model = child.id"
+                    @click="choose(child.id)"
                 >
                     <XAvatar :name="child.name" :color="child.color" decorative />
                     <span class="grow">
@@ -64,7 +70,7 @@ const itemClass =
             <button
                 type="button"
                 :class="[itemClass, 'gap-2.5 text-[14px] font-bold text-primary-text hover:bg-bg']"
-                @click="$emit('add')"
+                @click="emit('add')"
             >
                 <Plus :size="18" aria-hidden="true" />
                 {{ addLabel }}

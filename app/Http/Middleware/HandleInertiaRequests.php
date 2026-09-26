@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Domain\Children\Models\ChildProfile;
+use App\Domain\Identity\Enums\Role;
+use App\Domain\Identity\Models\User;
+use App\Http\Controllers\Parent\CurrentChildController;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,6 +45,34 @@ class HandleInertiaRequests extends Middleware
                     'roles' => $user->getRoleNames(),
                 ],
             ],
+            'parent' => fn (): ?array => $user instanceof User && $user->hasRole(Role::Parent->value)
+                ? $this->parentSpace($request, $user)
+                : null,
+        ];
+    }
+
+    /**
+     * Enfants du parent pour le sélecteur, et enfant courant (choisi en session, sinon le premier).
+     *
+     * @return array{children: list<array{id: int, firstName: string, grade: string, birthYear: int|null}>, currentChildId: int|null}
+     */
+    private function parentSpace(Request $request, User $user): array
+    {
+        $children = array_values(ChildProfile::query()->ownedBy($user)->get()
+            ->map(fn (ChildProfile $child): array => [
+                'id' => $child->id,
+                'firstName' => $child->first_name,
+                'grade' => $child->grade->value,
+                'birthYear' => $child->birth_year,
+            ])
+            ->all());
+
+        $ids = array_column($children, 'id');
+        $selected = $request->session()->get(CurrentChildController::SESSION_KEY);
+
+        return [
+            'children' => $children,
+            'currentChildId' => in_array($selected, $ids, true) ? $selected : ($ids[0] ?? null),
         ];
     }
 }

@@ -28,6 +28,24 @@ test('un parent arrive dans son espace et ne peut pas entrer dans l’espace pro
     expect(response?.status()).toBe(403);
 });
 
+test('un parent passe d’un enfant à l’autre', async ({ page }) => {
+    await login(page, 'parent@example.com');
+
+    // Point de départ connu, quel que soit le choix laissé par un passage précédent.
+    const switcher = page.getByRole('button', { name: /^Changer d’enfant, actuellement/ });
+    for (const [name, week] of [
+        ['Emma', 'La semaine d’Emma'],
+        ['Lucas', 'La semaine de Lucas'],
+    ]) {
+        await switcher.click();
+        await page.getByRole('button', { name: new RegExp(`^${name}`) }).click();
+        // Le sous-titre existe en version mobile (masquée) et bureau.
+        await expect(page.getByText(week).filter({ visible: true })).toBeVisible();
+        await expect(switcher).toHaveAccessibleName(`Changer d’enfant, actuellement ${name}`);
+    }
+    await expectNoSeriousViolations(page);
+});
+
 // Le pro de démo n'a pas de 2FA confirmée : il doit l'activer avant d'entrer dans son espace.
 test('un pro sans 2FA est guidé vers son activation, puis se déconnecte', async ({ page }) => {
     await login(page, 'pro@example.com');
