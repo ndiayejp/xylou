@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Domain\Children\Models;
 
 use App\Domain\Children\Enums\AvatarKey;
-use App\Domain\Children\Enums\Grade;
 use App\Domain\Children\Policies\ChildProfilePolicy;
+use App\Domain\Curriculum\Enums\Grade;
+use App\Domain\Curriculum\Models\Interest;
 use App\Domain\Identity\Models\User;
 use Database\Factories\ChildProfileFactory;
 use Illuminate\Auth\Authenticatable;

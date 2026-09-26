@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use App\Domain\Children\Enums\AvatarKey;
-use App\Domain\Children\Enums\Grade;
 use App\Domain\Children\Models\ChildProfile;
 use App\Domain\Children\Models\Onboarding;
+use App\Domain\Curriculum\Enums\Grade;
 use App\Domain\Identity\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 

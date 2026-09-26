@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Children\Data;
 
 use App\Domain\Children\Enums\AvatarKey;
-use App\Domain\Children\Enums\Grade;
+use App\Domain\Curriculum\Enums\Grade;
 
 // Saisie de l'écran 2. spatie/laravel-data n'est pas encore installé : simple objet immuable.
 final readonly class ChildProfileInput

@@ -1,0 +1,280 @@
+# Référentiel de français, du CP à la 3e — version 1.
+# Rédigé d'après les programmes officiels des cycles 2, 3 et 4 : À VALIDER PAR L'ÉQUIPE PÉDAGOGIQUE.
+# Règles d'écriture : voir maths.yaml. Après modification : php artisan curriculum:sync
+
+subject:
+  key: french
+  color: french
+  icon: book-open
+  position: 2
+
+domains:
+  - code: FR.READ
+    label: 'Lecture et compréhension de l’écrit'
+    skills:
+      - code: FR.CP.READ.SOUNDS
+        grades: cp
+        label: 'Connaître les correspondances entre lettres et sons'
+      - code: FR.CP.READ.DECODE
+        grades: cp
+        label: 'Déchiffrer des syllabes et des mots'
+      - code: FR.CP.READ.WORDS
+        grades: cp
+        label: 'Reconnaître des mots courants'
+      - code: FR.CP.READ.SENTENCE
+        grades: cp
+        label: 'Comprendre une phrase lue seul'
+      - code: FR.CE1.READ.FLUENCY
+        grades: ce1
+        label: 'Lire à voix haute avec fluidité'
+      - code: FR.CE1.READ.TEXT
+        grades: ce1
+        label: 'Comprendre un texte court'
+      - code: FR.CE1.READ.IMPLICIT
+        grades: ce1
+        label: 'Trouver une information implicite simple'
+      - code: FR.CE2.READ.TEXT
+        grades: ce2
+        label: 'Comprendre un texte et répondre à des questions'
+      - code: FR.CE2.READ.INSTRUCTIONS
+        grades: ce2
+        label: 'Lire et comprendre une consigne'
+      - code: FR.CM1.READ.TEXT
+        grades: cm1
+        label: 'Comprendre des textes variés (récits, documentaires)'
+      - code: FR.CM1.READ.INFER
+        grades: cm1
+        label: 'Faire des inférences à partir d’un texte'
+      - code: FR.CM2.READ.TEXT
+        grades: cm2
+        label: 'Comprendre un texte littéraire long'
+      - code: FR.CM2.READ.DOC
+        grades: cm2
+        label: 'Lire un document (tableau, schéma, carte)'
+      - code: FR.6E.READ.TEXT
+        grades: 6e
+        label: 'Identifier narrateur et personnages d’un récit'
+      - code: FR.6E.READ.INFER
+        grades: 6e
+        label: 'Interpréter un texte (implicite, intentions des personnages)'
+      - code: FR.5E.READ.GENRES
+        grades: 5e
+        label: 'Lire et comprendre des textes de genres variés'
+      - code: FR.5E.READ.CHARACTER
+        grades: 5e
+        label: 'Analyser un personnage'
+      - code: FR.4E.READ.VIEWPOINT
+        grades: 4e
+        label: 'Analyser le point de vue et la visée d’un texte'
+      - code: FR.4E.READ.ARG
+        grades: 4e
+        label: 'Comprendre un texte argumentatif'
+      - code: FR.3E.READ.ANALYSIS
+        grades: 3e
+        label: 'Analyser un texte littéraire (forme et sens)'
+      - code: FR.3E.READ.IMAGE
+        grades: 3e
+        label: 'Analyser une image en lien avec un texte'
+
+  - code: FR.WRITE
+    label: 'Écriture'
+    skills:
+      - code: FR.CP.WRITE.COPY
+        grades: cp
+        label: 'Copier un mot ou une phrase sans erreur'
+      - code: FR.CP.WRITE.SENTENCE
+        grades: cp
+        label: 'Écrire une phrase simple'
+      - code: FR.CE1.WRITE.TEXT
+        grades: ce1
+        label: 'Écrire un texte court de quelques phrases'
+      - code: FR.CE2.WRITE.STORY
+        grades: ce2
+        label: 'Rédiger un court récit'
+      - code: FR.CM1.WRITE.PARAGRAPHS
+        grades: cm1
+        label: 'Écrire un texte organisé en paragraphes'
+      - code: FR.CM1.WRITE.REVISE
+        grades: cm1-cm2
+        label: 'Relire et améliorer son texte'
+      - code: FR.CM2.WRITE.STORY
+        grades: cm2
+        label: 'Rédiger un récit cohérent'
+      - code: FR.6E.WRITE.STORY
+        grades: 6e
+        label: 'Écrire un récit en respectant une consigne'
+      - code: FR.5E.WRITE.OPINION
+        grades: 5e
+        label: 'Exprimer et justifier un avis'
+      - code: FR.4E.WRITE.ARG
+        grades: 4e
+        label: 'Rédiger un paragraphe argumenté'
+      - code: FR.3E.WRITE.ARG
+        grades: 3e
+        label: 'Rédiger un texte argumentatif'
+      - code: FR.3E.WRITE.INVENTION
+        grades: 3e
+        label: 'Rédiger une suite ou un texte d’invention'
+
+  - code: FR.GRAM
+    label: 'Grammaire et conjugaison'
+    skills:
+      - code: FR.CP.GRAM.SENTENCE
+        grades: cp
+        label: 'Reconnaître une phrase (majuscule et point)'
+      - code: FR.CE1.GRAM.NOUNVERB
+        grades: ce1
+        label: 'Identifier le nom et le verbe'
+      - code: FR.CE1.GRAM.PRESENT
+        grades: ce1
+        label: 'Conjuguer au présent être, avoir et les verbes en -er'
+      - code: FR.CE2.GRAM.SUBJECT
+        grades: ce2
+        label: 'Identifier le sujet et le verbe'
+      - code: FR.CE2.GRAM.TENSES
+        grades: ce2
+        label: 'Conjuguer au présent, au futur et à l’imparfait'
+      - code: FR.CE2.GRAM.PASTCOMP
+        grades: ce2
+        label: 'Conjuguer au passé composé'
+      - code: FR.CM1.GRAM.COMPL
+        grades: cm1
+        label: 'Identifier les compléments du verbe et de phrase'
+      - code: FR.CM1.GRAM.TENSES
+        grades: cm1
+        label: 'Conjuguer au passé simple et au futur'
+      - code: FR.CM2.GRAM.CLASSES
+        grades: cm2
+        label: 'Identifier les classes de mots'
+      - code: FR.CM2.GRAM.COMPLEX
+        grades: cm2
+        label: 'Distinguer phrase simple et phrase complexe'
+      - code: FR.CM2.GRAM.INDICATIVE
+        grades: cm2
+        label: 'Conjuguer aux temps simples et composés de l’indicatif'
+      - code: FR.6E.GRAM.FUNCTIONS
+        grades: 6e
+        label: 'Identifier les fonctions dans la phrase (sujet, attribut, compléments)'
+      - code: FR.6E.GRAM.NARRATIVE
+        grades: 6e
+        label: 'Employer passé simple et imparfait dans un récit'
+      - code: FR.6E.GRAM.IMPERATIVE
+        grades: 6e
+        label: 'Conjuguer à l’impératif présent'
+      - code: FR.5E.GRAM.CLAUSES
+        grades: 5e
+        label: 'Distinguer propositions juxtaposées, coordonnées et subordonnées'
+      - code: FR.5E.GRAM.SUBJUNCTIVE
+        grades: 5e
+        label: 'Conjuguer au subjonctif présent'
+      - code: FR.5E.GRAM.CONDITIONAL
+        grades: 5e
+        label: 'Conjuguer au conditionnel présent'
+      - code: FR.4E.GRAM.SUBORD
+        grades: 4e
+        label: 'Identifier les subordonnées relatives et conjonctives'
+      - code: FR.4E.GRAM.SPEECH
+        grades: 4e
+        label: 'Passer du discours direct au discours indirect'
+      - code: FR.4E.GRAM.MOODS
+        grades: 4e
+        label: 'Choisir le mode et le temps du verbe'
+      - code: FR.3E.GRAM.COMPLEX
+        grades: 3e
+        label: 'Analyser la phrase complexe'
+      - code: FR.3E.GRAM.VOICE
+        grades: 3e
+        label: 'Passer de la voix active à la voix passive'
+
+  - code: FR.ORTH
+    label: 'Orthographe'
+    skills:
+      - code: FR.CP.ORTH.WORDS
+        grades: cp
+        label: 'Écrire sans erreur les mots les plus fréquents'
+      - code: FR.CE1.ORTH.PLURAL
+        grades: ce1
+        label: 'Accorder le nom au pluriel (-s, -x)'
+      - code: FR.CE1.ORTH.SOUNDS
+        grades: ce1
+        label: 'Écrire correctement les sons (s/ss, c/ç, g/ge)'
+      - code: FR.CE2.ORTH.NOUNGROUP
+        grades: ce2
+        label: 'Accorder dans le groupe nominal (déterminant, nom, adjectif)'
+      - code: FR.CE2.ORTH.SUBJVERB
+        grades: ce2
+        label: 'Accorder le verbe avec son sujet'
+      - code: FR.CM1.ORTH.HOMOPHONES
+        grades: cm1
+        label: 'Distinguer a/à, et/est, son/sont'
+      - code: FR.CM1.ORTH.PPETRE
+        grades: cm1
+        label: 'Accorder le participe passé employé avec être'
+      - code: FR.CM2.ORTH.HOMOPHONES
+        grades: cm2
+        label: 'Distinguer ces/ses, on/ont, ou/où'
+      - code: FR.CM2.ORTH.AGREEMENTS
+        grades: cm2
+        label: 'Réussir les accords dans la phrase'
+      - code: FR.6E.ORTH.SUBJVERB
+        grades: 6e
+        label: 'Accorder le verbe avec un sujet éloigné ou inversé'
+      - code: FR.6E.ORTH.PPETRE
+        grades: 6e
+        label: 'Accorder le participe passé avec être (révision)'
+      - code: FR.5E.ORTH.PPAVOIR
+        grades: 5e
+        label: 'Accorder le participe passé employé avec avoir'
+      - code: FR.5E.ORTH.HOMOPHONES
+        grades: 5e
+        label: 'Distinguer quel/qu’elle, leur/leurs'
+      - code: FR.4E.ORTH.PP
+        grades: 4e
+        label: 'Accorder le participe passé (cas usuels)'
+      - code: FR.3E.ORTH.DICTATION
+        grades: 3e
+        label: 'Réussir une dictée (révision des accords)'
+
+  - code: FR.LEX
+    label: 'Vocabulaire'
+    skills:
+      - code: FR.CE1.LEX.ALPHA
+        grades: ce1
+        label: 'Ranger des mots dans l’ordre alphabétique'
+      - code: FR.CE2.LEX.DICT
+        grades: ce2
+        label: 'Chercher un mot dans le dictionnaire'
+      - code: FR.CE2.LEX.SYNONYMS
+        grades: ce2
+        label: 'Trouver des synonymes et des contraires'
+      - code: FR.CM1.LEX.FAMILY
+        grades: cm1
+        label: 'Former des mots (familles, préfixes, suffixes)'
+      - code: FR.CM2.LEX.MEANING
+        grades: cm2
+        label: 'Distinguer sens propre et sens figuré'
+      - code: FR.6E.LEX.FORMATION
+        grades: 6e
+        label: 'Analyser la formation des mots (radical, préfixe, suffixe)'
+      - code: FR.5E.LEX.FIELD
+        grades: 5e
+        label: 'Repérer un champ lexical'
+      - code: FR.4E.LEX.FIGURES
+        grades: 4e
+        label: 'Reconnaître comparaison et métaphore'
+      - code: FR.4E.LEX.REGISTERS
+        grades: 4e
+        label: 'Reconnaître les niveaux de langue'
+      - code: FR.3E.LEX.FIGURES
+        grades: 3e
+        label: 'Reconnaître les figures de style (hyperbole, personnification…)'
+      - code: FR.3E.LEX.ETYMOLOGY
+        grades: 3e
+        label: 'Utiliser l’étymologie pour comprendre un mot'
+
+  - code: FR.ORAL
+    label: 'Langage oral'
+    skills:
+      - code: FR.CP.ORAL.LISTEN
+        grades: cp
+        label: 'Écouter et comprendre un texte lu par un adulte'

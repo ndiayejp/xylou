@@ -30,9 +30,14 @@ arch('Support ne dépend d\'aucun domaine')
     ->not->toUse('App\Domain');
 
 arch('les Actions des domaines sont des classes finales invocables')
-    ->expect(['App\Domain\Identity\Actions', 'App\Domain\Children\Actions'])
+    ->expect(['App\Domain\Identity\Actions', 'App\Domain\Children\Actions', 'App\Domain\Curriculum\Actions'])
     ->toBeFinal()
     ->toHaveMethod('__invoke');
+
+// Le référentiel est une donnée de base : les autres domaines le lisent, lui ne dépend de personne.
+arch('le référentiel ne dépend d’aucun autre domaine')
+    ->expect('App\Domain\Curriculum')
+    ->not->toUse(['App\Domain\Children', 'App\Domain\Identity', 'App\Domain\Privacy', 'App\Domain\Activities']);
 
 arch('les Policies vivent dans leur domaine')
     ->expect('App\Policies')

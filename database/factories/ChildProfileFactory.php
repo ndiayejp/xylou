@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Domain\Children\Enums\Grade;
 use App\Domain\Children\Models\ChildProfile;
+use App\Domain\Curriculum\Enums\Grade;
 use App\Domain\Identity\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
