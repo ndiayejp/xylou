@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Curriculum\Models;
 
+use Database\Factories\SubjectFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -16,8 +19,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $icon_key
  * @property int $position
  */
+#[UseFactory(SubjectFactory::class)]
 class Subject extends Model
 {
+    /** @use HasFactory<SubjectFactory> */
+    use HasFactory;
+
     protected $fillable = ['key', 'color_token', 'icon_key', 'position'];
 
     /** @return HasMany<Skill, $this> */
