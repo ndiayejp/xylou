@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Domain\Curriculum\Models;
 
 use App\Domain\Curriculum\Enums\Grade;
+use Database\Factories\SkillFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -30,8 +33,12 @@ use Illuminate\Support\Carbon;
  * @property-read Subject $subject
  * @property-read Skill|null $parent
  */
+#[UseFactory(SkillFactory::class)]
 class Skill extends Model
 {
+    /** @use HasFactory<SkillFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'subject_id', 'parent_skill_id', 'code', 'label', 'description',
         'grade_min', 'grade_max', 'position', 'retired_at',

@@ -30,7 +30,7 @@ arch('Support ne dépend d\'aucun domaine')
     ->not->toUse('App\Domain');
 
 arch('les Actions des domaines sont des classes finales invocables')
-    ->expect(['App\Domain\Identity\Actions', 'App\Domain\Children\Actions', 'App\Domain\Curriculum\Actions'])
+    ->expect(['App\Domain\Identity\Actions', 'App\Domain\Children\Actions', 'App\Domain\Curriculum\Actions', 'App\Domain\Activities\Actions'])
     ->toBeFinal()
     ->toHaveMethod('__invoke');
 
