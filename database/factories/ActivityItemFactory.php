@@ -26,6 +26,7 @@ class ActivityItemFactory extends Factory
             'answer_type' => AnswerType::Number,
             'expected_answer' => ['value' => $a * $b],
             'hint' => 'Pense aux tables de multiplication.',
+            'explanation' => "{$a} × {$b} = ".($a * $b).'.',
         ];
     }
 }

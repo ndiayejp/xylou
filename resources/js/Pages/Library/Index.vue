@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ChevronLeft, ChevronRight, Library, Search, SearchX, Sparkles, Trash2 } from '@lucide/vue';
+import {
+    ChevronLeft,
+    ChevronRight,
+    Library,
+    Plus,
+    Search,
+    SearchX,
+    Sparkles,
+    Trash2,
+} from '@lucide/vue';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import XButton from '@/Components/ui/XButton.vue';
@@ -220,18 +229,25 @@ function clearFilters(): void {
 
 // Actions sur une carte : la liste se recharge, un toast confirme (avec « Annuler » si réversible).
 function act(activity: LibraryActivity, action: LibraryAction): void {
-    const requests: Record<LibraryAction, { method: 'post' | 'delete'; route: string }> = {
+    if (action === 'edit') {
+        router.visit(route('activities.edit', activity.id));
+        return;
+    }
+    const requests: Record<
+        Exclude<LibraryAction, 'edit'>,
+        { method: 'post' | 'delete'; route: string }
+    > = {
         duplicate: { method: 'post', route: 'activities.duplicate' },
         archive: { method: 'post', route: 'activities.archive' },
         unarchive: { method: 'delete', route: 'activities.unarchive' },
         delete: { method: 'delete', route: 'activities.destroy' },
         restore: { method: 'post', route: 'activities.restore' },
     };
-    const undo: Partial<Record<LibraryAction, LibraryAction>> = {
+    const undo: Partial<Record<LibraryAction, Exclude<LibraryAction, 'edit'>>> = {
         archive: 'unarchive',
         delete: 'restore',
     };
-    const toasts: Record<LibraryAction, string> = {
+    const toasts: Record<Exclude<LibraryAction, 'edit'>, string> = {
         duplicate: 'library.toasts.duplicated',
         archive: 'library.toasts.archived',
         unarchive: 'library.toasts.unarchived',
@@ -266,6 +282,11 @@ function act(activity: LibraryActivity, action: LibraryAction): void {
             <p class="mt-1 text-[14px] text-muted">
                 {{ $t('library.count', total) }} · {{ $t('library.subtitle') }}
             </p>
+        </template>
+        <template #actions>
+            <XButton :icon="Plus" @click="router.visit(route('activities.create'))">
+                {{ $t('library.create') }}
+            </XButton>
         </template>
 
         <XCard v-if="total === 0 && !inTrash" padding="lg" class="flex min-h-[300px] items-center">

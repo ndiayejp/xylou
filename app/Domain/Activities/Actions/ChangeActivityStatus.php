@@ -24,8 +24,9 @@ final readonly class ChangeActivityStatus
             throw ActivityRuleViolation::transition($from, $to);
         }
 
-        if (in_array($to, [ActivityStatus::PendingReview, ActivityStatus::Approved], true) && ! $activity->items()->exists()) {
-            throw ActivityRuleViolation::withoutItems();
+        // Rien d'incomplet ne part en relecture ni devant l'enfant.
+        if (in_array($to, [ActivityStatus::PendingReview, ActivityStatus::Approved], true)) {
+            $activity->ensureReady();
         }
 
         $activity->status = $to;

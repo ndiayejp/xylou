@@ -10,6 +10,7 @@ const isPro = usePage().props.auth.user.roles.includes('professional');
 <template>
     <component :is="isPro ? ProSpace : ParentSpace">
         <template #header><slot name="header" /></template>
+        <template #actions><slot name="actions" /></template>
         <slot />
     </component>
 </template>

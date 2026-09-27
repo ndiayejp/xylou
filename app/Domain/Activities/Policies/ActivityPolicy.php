@@ -23,7 +23,7 @@ final class ActivityPolicy
 
     public function update(User $user, Activity $activity): bool
     {
-        return $activity->isOwnedBy($user);
+        return $activity->isOwnedBy($user) && $activity->status->isEditable();
     }
 
     public function duplicate(User $user, Activity $activity): bool

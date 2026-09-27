@@ -10,6 +10,7 @@ final readonly class ActivityItemInput
 {
     /**
      * @param  array<array-key, mixed>  $expectedAnswer
+     * @param  array<string, mixed>|null  $promptPayload  ex. {choices: [...]} pour un choix
      * @param  list<array{answer: mixed, message: string}>  $commonErrors
      */
     public function __construct(
@@ -20,6 +21,7 @@ final readonly class ActivityItemInput
         public ?string $hint = null,
         public ?string $explanation = null,
         public array $commonErrors = [],
+        public ?array $promptPayload = null,
     ) {}
 
     /** @return array<string, mixed> */
@@ -28,6 +30,7 @@ final readonly class ActivityItemInput
         return [
             'position' => $position,
             'prompt' => $this->prompt,
+            'prompt_payload' => $this->promptPayload,
             'answer_type' => $this->answerType,
             'expected_answer' => $this->expectedAnswer,
             'tolerance' => $this->tolerance,

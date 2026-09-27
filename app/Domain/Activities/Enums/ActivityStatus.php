@@ -33,6 +33,12 @@ enum ActivityStatus: string
         return in_array($status, $this->allowedTransitions(), true);
     }
 
+    // L'adulte modifie un brouillon ou une activité validée ; le reste passe par la relecture ou les archives.
+    public function isEditable(): bool
+    {
+        return in_array($this, [self::Draft, self::Approved], true);
+    }
+
     // Une activité en cours de génération ou en échec n'a pas encore d'items.
     public function hasContent(): bool
     {
