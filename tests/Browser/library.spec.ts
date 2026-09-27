@@ -68,3 +68,29 @@ test('le menu d’une carte se pilote au clavier', async ({ page }) => {
     await expect(page.getByRole('menu')).toHaveCount(0);
     await expect(trigger).toBeFocused();
 });
+
+test('une phrase devient des filtres, un mot mal écrit est retrouvé', async ({ page }) => {
+    await openLibrary(page);
+    const search = page.getByRole('searchbox', { name: 'Recherche intelligente' });
+
+    await search.fill('problèmes courts avec des animaux');
+    await search.press('Enter');
+    await expect(page).toHaveURL(/subject=maths/);
+    await expect(page).toHaveURL(/duration=short/);
+    await expect(page).toHaveURL(/universe=forest/);
+    await expect(page.getByRole('status').filter({ hasText: 'Compris comme' })).toHaveText(
+        'Compris comme « Mathématiques · Courte (10 min max) · Forêt »',
+    );
+    await expect(page.getByRole('heading', { name: 'Le renard compte ses pas' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Mission Mars' })).toHaveCount(0);
+    await expectNoSeriousViolations(page);
+
+    // Meilisearch tolère la faute de frappe.
+    await page.getByRole('button', { name: 'Effacer' }).first().click();
+    await search.fill('capitain');
+    await search.press('Enter');
+    await expect(page.getByText('1 résultat pour « capitain »')).toBeVisible();
+    await expect(
+        page.getByRole('heading', { name: 'Le journal de bord du capitaine' }),
+    ).toBeVisible();
+});

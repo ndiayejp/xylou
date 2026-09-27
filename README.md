@@ -27,6 +27,10 @@ composer services
 # 3. Dépendances, .env, clé, migrations, build
 composer setup
 
+# 3 bis. Index de recherche (Meilisearch), puis données de démonstration
+php artisan scout:sync-index-settings
+php artisan db:seed
+
 # 4. Serveur, file d'attente et Vite
 composer dev
 ```

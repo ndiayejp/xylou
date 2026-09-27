@@ -62,12 +62,13 @@ class DatabaseSeeder extends Seeder
             ['Le journal de bord du capitaine', 'french', 'space', ActivityStatus::Approved, 15],
         ] as $rank => [$title, $subject, $key, $status, $minutes]) {
             $picked = $skill($subject, $rank);
+            // WithoutModelEvents coupe l'indexation automatique de Scout : on indexe à la main.
             Activity::factory()->for($parent, 'owner')->for($picked)->status($status)->create([
                 'subject_id' => $picked->subject_id,
                 'universe_id' => $universe($key),
                 'title' => $title,
                 'duration_minutes' => $minutes,
-            ]);
+            ])->searchable();
         }
     }
 }

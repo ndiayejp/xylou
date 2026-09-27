@@ -114,6 +114,12 @@ jobs:
         options: >-
           --health-cmd "pg_isready -U xylou"
           --health-interval 5s --health-timeout 5s --health-retries 10
+      # Recherche de la bibliothèque : le vrai moteur, comme en local (les tests Pest utilisent le driver collection).
+      meilisearch:
+        image: getmeili/meilisearch:latest
+        env:
+          MEILI_NO_ANALYTICS: 'true'
+        ports: ['7700:7700']
     env:
       DB_PORT: 5432
       # Pas de Mailpit en CI : le mail de vérification (inscription) part dans les logs.
@@ -133,6 +139,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: cp .env.example .env && php artisan key:generate
+      - run: php artisan scout:sync-index-settings
       - run: php artisan migrate --seed --force
       - run: npm run build
       - run: npm run test:e2e

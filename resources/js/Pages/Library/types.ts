@@ -19,7 +19,16 @@ export interface LibraryActivity {
 export type LibraryFilterKey =
     'subject' | 'skill' | 'grade' | 'duration' | 'difficulty' | 'universe' | 'status';
 
-export type LibraryFilters = Record<LibraryFilterKey, string>;
+// « q » : texte cherché (Meilisearch), hors pastilles.
+export type LibraryFilters = Record<LibraryFilterKey | 'q', string>;
+
+// Ce que la recherche en langage naturel a compris (une seule fois, après l'envoi).
+export type LibraryUnderstood = Partial<
+    Record<Exclude<LibraryFilterKey, 'skill' | 'status'>, string>
+> & {
+    child?: string;
+    text: string;
+};
 
 export interface LibraryOptions {
     subjects: LibraryActivity['subject'][];

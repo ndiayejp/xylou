@@ -281,3 +281,86 @@ describe('actions', function (): void {
         $this->actingAs($parent)->post(route('activities.archive', $activity))->assertNotFound();
     });
 });
+
+describe('recherche', function (): void {
+    test('le texte cherche dans le titre et la compétence, parmi les activités de l’adulte', function (): void {
+        $parent = User::factory()->parent()->create();
+        $rocket = Activity::factory()->for($parent, 'owner')->create(['title' => 'La fusée des tables']);
+        $bySkill = Activity::factory()->for($parent, 'owner')
+            ->for(Skill::factory()->state(['label' => 'Voyage en fusée : les distances']))->create();
+        Activity::factory()->for($parent, 'owner')->create(['title' => 'Mission Mars']);
+        Activity::factory()->create(['title' => 'La fusée d’un autre parent']);
+
+        expect(libraryIds($parent, ['q' => 'fusée', 'grade' => '']))->toBe(sortedIds($rocket, $bySkill));
+        $this->get(route('parent.library', ['q' => 'fusée', 'grade' => '']))
+            ->assertInertia(fn (Assert $page): Assert => $page->where('filters.q', 'fusée'));
+    });
+
+    test('le texte se combine aux filtres et à la corbeille', function (): void {
+        $parent = User::factory()->parent()->create();
+        Activity::factory()->for($parent, 'owner')->create(['title' => 'La fusée des tables', 'duration_minutes' => 5]);
+        $long = Activity::factory()->for($parent, 'owner')->create(['title' => 'La grande fusée', 'duration_minutes' => 20]);
+        $trashed = Activity::factory()->for($parent, 'owner')->create(['title' => 'Fusée oubliée']);
+        $trashed->delete();
+
+        expect(libraryIds($parent, ['q' => 'fusée', 'duration' => 'long', 'grade' => '']))->toBe([$long->id])
+            ->and(libraryIds($parent, ['q' => 'fusée', 'status' => 'deleted']))->toBe([$trashed->id]);
+    });
+
+    test('les durées courtes et longues', function (): void {
+        $parent = User::factory()->parent()->create();
+        $five = Activity::factory()->for($parent, 'owner')->create(['duration_minutes' => 5]);
+        $ten = Activity::factory()->for($parent, 'owner')->create(['duration_minutes' => 10]);
+        $fifteen = Activity::factory()->for($parent, 'owner')->create(['duration_minutes' => 15]);
+
+        expect(libraryIds($parent, ['duration' => 'short', 'grade' => '']))->toBe(sortedIds($five, $ten))
+            ->and(libraryIds($parent, ['duration' => 'long', 'grade' => '']))->toBe([$fifteen->id]);
+    });
+
+    test('une phrase remplit les filtres, garde les autres, et dit ce qu’elle a compris', function (): void {
+        $parent = User::factory()->parent()->create();
+        ChildProfile::factory()->for($parent, 'owner')->create(['first_name' => 'Emma', 'grade' => Grade::Ce2]);
+
+        $this->actingAs($parent)
+            ->get(route('parent.library', ['ask' => 'problèmes courts avec des animaux pour Emma', 'difficulty' => 'practice', 'skill' => '3']))
+            ->assertRedirect(route('parent.library', [
+                'difficulty' => 'practice',
+                'subject' => 'maths',
+                'grade' => 'ce2',
+                'duration' => 'short',
+                'universe' => 'forest',
+            ]))
+            ->assertSessionHas('library.understood', [
+                'subject' => 'maths',
+                'grade' => 'ce2',
+                'child' => 'Emma',
+                'duration' => 'short',
+                'universe' => 'forest',
+                'text' => '',
+            ]);
+
+        $this->get(route('parent.library', ['subject' => 'maths', 'grade' => 'ce2']))
+            ->assertInertia(fn (Assert $page): Assert => $page->where('understood.child', 'Emma'));
+        $this->get(route('parent.library'))
+            ->assertInertia(fn (Assert $page): Assert => $page->where('understood', null));
+    });
+
+    test('ce qui n’est pas compris devient le texte cherché', function (): void {
+        $this->actingAs(User::factory()->parent()->create())
+            ->get(route('parent.library', ['ask' => 'les fractions', 'grade' => '']))
+            ->assertRedirect(route('parent.library', ['grade' => '', 'q' => 'fractions']))
+            ->assertSessionMissing('library.understood');
+    });
+
+    test('un pro cherche dans son espace', function (): void {
+        $this->actingAs(User::factory()->professional()->withTwoFactor()->create())
+            ->get(route('pro.library', ['ask' => 'défi espace']))
+            ->assertRedirect(route('pro.library', ['difficulty' => 'challenge', 'universe' => 'space']));
+    });
+});
+
+test('une adresse retouchée avec des tableaux ne casse pas la page', function (): void {
+    $this->actingAs(User::factory()->parent()->create())
+        ->get('/parent/bibliotheque?subject[]=maths&q[]=x&duration[]=5&ask[]=foo')
+        ->assertOk();
+});

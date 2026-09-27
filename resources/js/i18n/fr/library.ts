@@ -16,6 +16,10 @@ export default {
         duration: 'Durée',
         allDurations: 'Toutes les durées',
         minutes: '{count} min',
+        durations: {
+            short: 'Courte (10 min max)',
+            long: 'Longue (15 min et plus)',
+        },
         difficulty: 'Difficulté',
         allDifficulties: 'Toutes les difficultés',
         universe: 'Thème',
@@ -30,6 +34,15 @@ export default {
         list: 'Liste',
     },
     results: 'Aucun résultat | 1 résultat | {count} résultats',
+    resultsFor:
+        'Aucun résultat pour « {text} » | 1 résultat pour « {text} » | {count} résultats pour « {text} »',
+    search: {
+        label: 'Recherche intelligente',
+        placeholder: 'Ex. : problèmes courts avec des animaux',
+        understood: 'Compris comme « {summary} »',
+        gradeOf: '{grade} ({name})',
+        text: 'mots : {text}',
+    },
     loading: 'Chargement des activités…',
     card: {
         actions: 'Actions sur « {title} »',
