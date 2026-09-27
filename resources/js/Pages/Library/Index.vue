@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ChevronLeft, ChevronRight, Library, SearchX, Trash2 } from '@lucide/vue';
+import { ChevronLeft, ChevronRight, Library, Search, SearchX, Sparkles, Trash2 } from '@lucide/vue';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import XButton from '@/Components/ui/XButton.vue';
 import XCard from '@/Components/ui/XCard.vue';
 import XEmptyState from '@/Components/ui/XEmptyState.vue';
 import XFilterSelect, { type XFilterOption } from '@/Components/ui/XFilterSelect.vue';
+import XInput from '@/Components/ui/XInput.vue';
 import XSegmented from '@/Components/ui/XSegmented.vue';
 import XSkeleton from '@/Components/ui/XSkeleton.vue';
 import { useToasts } from '@/Composables/useToasts';
@@ -18,6 +19,7 @@ import type {
     LibraryFilterKey,
     LibraryFilters,
     LibraryOptions,
+    LibraryUnderstood,
 } from './types';
 
 const props = defineProps<{
@@ -31,6 +33,7 @@ const props = defineProps<{
     filters: LibraryFilters;
     options: LibraryOptions;
     space: 'parent' | 'pro';
+    understood: LibraryUnderstood | null;
 }>();
 
 const { t } = useI18n();
@@ -49,19 +52,67 @@ watch(
 
 // Filtres : chaque changement recharge la page (URL partageable). « grade » est toujours envoyé :
 // vide, il annule le niveau pré-rempli avec la classe de l'enfant.
+function visit(extra: Record<string, string> = {}): void {
+    const query = Object.fromEntries(
+        Object.entries(state.value).filter(([key, value]) => value !== '' || key === 'grade'),
+    );
+    router.get(
+        route(`${props.space}.library`),
+        { ...query, ...extra },
+        {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true,
+            onStart: () => (loading.value = true),
+            onFinish: () => (loading.value = false),
+        },
+    );
+}
+
 function apply(next: Partial<LibraryFilters>): void {
     state.value = { ...state.value, ...next };
-    const filters = state.value;
-    const query = Object.fromEntries(
-        Object.entries(filters).filter(([key, value]) => value !== '' || key === 'grade'),
-    );
-    router.get(route(`${props.space}.library`), query, {
-        preserveState: true,
-        preserveScroll: true,
-        replace: true,
-        onStart: () => (loading.value = true),
-        onFinish: () => (loading.value = false),
-    });
+    visit();
+}
+
+// Recherche en langage naturel : le serveur remplit les pastilles avec ce qu'il comprend.
+const sentence = ref(props.filters.q);
+function ask(): void {
+    const text = sentence.value.trim();
+    if (text === '') {
+        apply({ q: '' });
+    } else {
+        state.value = { ...state.value, q: '' };
+        visit({ ask: text });
+    }
+}
+
+const understoodText = computed(() => {
+    const u = props.understood;
+    if (!u) {
+        return null;
+    }
+    const parts = [
+        u.subject && t(`subjects.${u.subject}`),
+        u.grade &&
+            (u.child
+                ? t('library.search.gradeOf', {
+                      grade: t(`children.grades.${u.grade}`),
+                      name: u.child,
+                  })
+                : t(`children.grades.${u.grade}`)),
+        u.duration && durationLabel(u.duration),
+        u.difficulty && t(`activities.difficulties.${u.difficulty}`),
+        u.universe && t(`universes.${u.universe}`),
+        u.text && t('library.search.text', { text: u.text }),
+    ].filter(Boolean);
+
+    return parts.join(' · ');
+});
+
+function durationLabel(value: string): string {
+    return ['short', 'long'].includes(value)
+        ? t(`library.filters.durations.${value}`)
+        : t('library.filters.minutes', { count: Number(value) });
 }
 
 function model(key: LibraryFilterKey) {
@@ -112,8 +163,8 @@ const filterBar = computed(() => {
         {
             key: 'duration',
             all: t('library.filters.allDurations'),
-            options: o.durations.map((m) =>
-                choice(String(m), t('library.filters.minutes', { count: m })),
+            options: [...o.durations.map(String), 'short', 'long'].map((m) =>
+                choice(m, durationLabel(m)),
             ),
         },
         {
@@ -162,7 +213,9 @@ function clearFilters(): void {
         difficulty: '',
         universe: '',
         status: '',
+        q: '',
     });
+    sentence.value = '';
 }
 
 // Actions sur une carte : la liste se recharge, un toast confirme (avec « Annuler » si réversible).
@@ -225,7 +278,27 @@ function act(activity: LibraryActivity, action: LibraryAction): void {
         </XCard>
 
         <template v-else>
-            <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <form role="search" class="mb-3" @submit.prevent="ask">
+                <XInput
+                    v-model="sentence"
+                    type="search"
+                    :icon="Search"
+                    :label="$t('library.search.label')"
+                    hide-label
+                    :placeholder="$t('library.search.placeholder')"
+                    enterkeyhint="search"
+                />
+            </form>
+            <p
+                v-if="understoodText"
+                class="mb-4 flex items-center gap-2 text-[14px] text-muted"
+                role="status"
+            >
+                <Sparkles :size="16" aria-hidden="true" class="text-primary-text" />
+                {{ $t('library.search.understood', { summary: understoodText }) }}
+            </p>
+
+            <div class="mb-5">
                 <div
                     role="group"
                     :aria-label="$t('library.filters.label')"
@@ -244,6 +317,18 @@ function act(activity: LibraryActivity, action: LibraryAction): void {
                         {{ $t('library.filters.clear') }}
                     </XButton>
                 </div>
+            </div>
+
+            <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+                <p class="text-[14px] font-semibold text-muted" aria-live="polite">
+                    {{
+                        loading
+                            ? $t('library.loading')
+                            : filters.q
+                              ? $t('library.resultsFor', { text: filters.q }, activities.total)
+                              : $t('library.results', activities.total)
+                    }}
+                </p>
                 <XSegmented
                     v-model="layout"
                     class="w-44 shrink-0"
@@ -254,10 +339,6 @@ function act(activity: LibraryActivity, action: LibraryAction): void {
                     ]"
                 />
             </div>
-
-            <p class="mb-3 text-[14px] font-semibold text-muted" aria-live="polite">
-                {{ loading ? $t('library.loading') : $t('library.results', activities.total) }}
-            </p>
 
             <div v-if="loading" aria-busy="true" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 <XCard v-for="n in 6" :key="n" class="flex flex-col gap-3">

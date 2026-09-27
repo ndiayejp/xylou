@@ -32,7 +32,8 @@ Activités (un ensemble d'items sur une compétence, dans un univers, avec un fo
 - Filtres dans l'URL (`LibraryRequest`) ; une valeur inconnue est ignorée. Espace parent : sans `grade` dans l'URL, le niveau est celui de l'enfant courant ; `grade=` l'efface.
 - Filtre « Compétence » : seulement les compétences des activités de l'adulte (dans la matière choisie).
 - Une action devenue impossible (`ActivityRuleViolation`) revient avec l'erreur `activity` (`lang/fr/activities.php`), affichée en toast.
-- Suppression et archivage proposent « Annuler » dans le toast (8 s). « Modifier » (éditeur, PR 5), « Recommander » (étape 6) et « Sauvegarder » (étape 9) n'apparaissent pas encore. Recherche plein texte : PR 4.
+- Suppression et archivage proposent « Annuler » dans le toast (8 s). « Modifier » (éditeur, PR 5), « Recommander » (étape 6) et « Sauvegarder » (étape 9) n'apparaissent pas encore.
+- **Recherche** (ADR 0017) : `q` = plein texte (Scout + Meilisearch, index `activities` sans rien sur l'enfant, corbeille comprise) ; `ask` = phrase interprétée par `InterpretLibrarySearch` (matière, classe, prénom d'un enfant → sa classe, durée `short` ≤ 10 min / `long` ≥ 15 min, difficulté, univers ; le reste devient `q`), puis redirection vers l'adresse filtrée avec « Compris comme … » (session flash `library.understood`).
 
 ## Actions
 
@@ -49,6 +50,7 @@ Activités (un ensemble d'items sur une compétence, dans un univers, avec un fo
 ## Tests
 
 - `tests/Unit/Activities/ActivityStatusTest.php` : les 36 couples de statuts.
-- `tests/Feature/Activities/LibraryTest.php` : accès par espace, contenu, corbeille, pagination, chaque filtre, niveau pré-rempli, actions et refus.
+- `tests/Unit/Activities/InterpretLibrarySearchTest.php` : mots compris, accents, classes, durées, difficultés, texte restant.
+- `tests/Feature/Activities/LibraryTest.php` : accès par espace, contenu, corbeille, pagination, chaque filtre, niveau pré-rempli, recherche et phrase interprétée, actions et refus.
 - `tests/Browser/library.spec.ts` : filtres, suppression annulée depuis le toast, menu au clavier, axe.
 - `tests/Feature/Activities/ActivityActionsTest.php` : chaque transition interdite refusée sans effet, création, duplication, archivage, corbeille et effacement à 30 jours, autorisations, journal sans donnée personnelle.

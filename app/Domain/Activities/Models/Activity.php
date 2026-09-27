@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Laravel\Scout\Searchable;
 
 /**
  * Le statut ne change que par les Actions du domaine (§6.3). Supprimée, l'activité reste 30 jours
@@ -64,7 +65,7 @@ use Illuminate\Support\Carbon;
 class Activity extends Model
 {
     /** @use HasFactory<ActivityFactory> */
-    use HasFactory, HasUlids, Prunable, SoftDeletes;
+    use HasFactory, HasUlids, Prunable, Searchable, SoftDeletes;
 
     public const array DURATIONS = [5, 10, 15, 20];
 
@@ -131,6 +132,36 @@ class Activity extends Model
     public function items(): HasMany
     {
         return $this->hasMany(ActivityItem::class)->orderBy('position');
+    }
+
+    /**
+     * Index de recherche (Meilisearch, auto-hébergé) : de quoi retrouver une activité par ses mots,
+     * et l'auteur pour filtrer. Rien sur l'enfant.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        $this->loadMissing(['skill:id,label', 'subject:id,key', 'universe:id,key']);
+
+        return [
+            'id' => $this->id,
+            'owner_id' => $this->owner_id,
+            'title' => $this->title,
+            'skill' => $this->skill->label,
+            'objective' => $this->learning_objective,
+            'subject' => $this->subject->key,
+            'universe' => $this->universe?->key,
+        ];
+    }
+
+    /**
+     * @param  Builder<self>  $query
+     * @return Builder<self>
+     */
+    protected function makeAllSearchableUsing(Builder $query): Builder
+    {
+        return $query->with(['skill:id,label', 'subject:id,key', 'universe:id,key']);
     }
 
     public function isOwnedBy(User $user): bool
