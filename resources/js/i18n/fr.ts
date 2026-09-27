@@ -1,10 +1,12 @@
 // Messages de l'interface (vue-i18n). Les messages du serveur restent dans lang/fr.
+import activityEditor from './fr/activityEditor';
 import landing from './fr/landing';
 import legal from './fr/legal';
 import library from './fr/library';
 import onboarding from './fr/onboarding';
 
 export default {
+    activityEditor,
     landing,
     legal,
     library,

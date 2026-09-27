@@ -50,6 +50,49 @@ class ActivityItem extends Model
         ];
     }
 
+    /**
+     * Question prête pour l'enfant : énoncé, explication (montrée avec « Pas encore ») et réponse
+     * attendue cohérente avec son type. Formes (éditeur, PR 5) :
+     * nombre {value, unit} ; texte {accepted: [..]} ; choix {index} ou {indexes: [..]} avec
+     * prompt_payload {choices: [..]}.
+     */
+    public function isComplete(): bool
+    {
+        if (trim($this->prompt) === '' || trim((string) $this->explanation) === '') {
+            return false;
+        }
+
+        $answer = $this->expected_answer;
+        $choices = $this->choices();
+
+        return match ($this->answer_type) {
+            AnswerType::Number => is_int($answer['value'] ?? null) || is_float($answer['value'] ?? null),
+            AnswerType::Text => $this->filledStrings($answer['accepted'] ?? null) !== [],
+            AnswerType::SingleChoice => count($choices) >= 2
+                && is_int($answer['index'] ?? null) && isset($choices[$answer['index']]),
+            AnswerType::MultipleChoice => count($choices) >= 2
+                && is_array($answer['indexes'] ?? null) && $answer['indexes'] !== []
+                && array_diff($answer['indexes'], array_keys($choices)) === [],
+            default => $answer !== [],
+        };
+    }
+
+    /** @return list<string> propositions d'un choix, toutes remplies, sinon aucune */
+    public function choices(): array
+    {
+        $choices = $this->filledStrings($this->prompt_payload['choices'] ?? null);
+
+        return count($choices) === count((array) ($this->prompt_payload['choices'] ?? [])) ? $choices : [];
+    }
+
+    /** @return list<string> */
+    private function filledStrings(mixed $values): array
+    {
+        return is_array($values)
+            ? array_values(array_filter($values, fn (mixed $v): bool => is_string($v) && trim($v) !== ''))
+            : [];
+    }
+
     /** @return BelongsTo<Activity, $this> */
     public function activity(): BelongsTo
     {

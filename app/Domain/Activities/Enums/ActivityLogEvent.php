@@ -9,6 +9,7 @@ enum ActivityLogEvent: string
 {
     case Created = 'created';
     case Duplicated = 'duplicated';
+    case Updated = 'updated';
     case StatusChanged = 'status_changed';
     case Deleted = 'deleted';
     case Restored = 'restored';

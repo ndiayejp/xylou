@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { Archive, ArchiveRestore, Clock, Copy, Globe, RotateCcw, Trash2 } from '@lucide/vue';
+import {
+    Archive,
+    ArchiveRestore,
+    Clock,
+    Copy,
+    Globe,
+    Pencil,
+    RotateCcw,
+    Trash2,
+} from '@lucide/vue';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import XAiBadge from '@/Components/ui/XAiBadge.vue';
@@ -45,10 +54,13 @@ const grades = computed(() => {
     return gradeMin === gradeMax ? min : `${min}–${t(`children.grades.${gradeMax}`)}`;
 });
 
-// Seules les actions possibles dans l'état de l'activité ; « Modifier » arrive avec l'éditeur.
+// Seules les actions possibles dans l'état de l'activité.
 const menu = computed<XMenuItem[]>(() => {
     const { status } = props.activity;
     const items: XMenuItem[] = [];
+    if (['draft', 'approved'].includes(status)) {
+        items.push({ key: 'edit', label: t('library.actions.edit'), icon: Pencil });
+    }
     if (!['generating', 'generation_failed'].includes(status)) {
         items.push({ key: 'duplicate', label: t('library.actions.duplicate'), icon: Copy });
     }

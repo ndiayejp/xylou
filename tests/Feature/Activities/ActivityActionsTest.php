@@ -9,6 +9,7 @@ use App\Domain\Activities\Actions\DeleteActivity;
 use App\Domain\Activities\Actions\DuplicateActivity;
 use App\Domain\Activities\Actions\RestoreActivity;
 use App\Domain\Activities\Actions\UnarchiveActivity;
+use App\Domain\Activities\Actions\UpdateActivity;
 use App\Domain\Activities\Data\ActivityInput;
 use App\Domain\Activities\Data\ActivityItemInput;
 use App\Domain\Activities\Enums\ActivityDifficulty;
@@ -41,8 +42,8 @@ function activityInput(array $overrides = []): ActivityInput
         'difficulty' => ActivityDifficulty::Practice,
         'durationMinutes' => 10,
         'items' => [
-            new ActivityItemInput('La fusée parcourt 240 km en 3 minutes. Combien en 1 minute ?', AnswerType::Number, ['value' => 80], hint: 'Partage en 3.'),
-            new ActivityItemInput('Et en 2 minutes ?', AnswerType::Number, ['value' => 160]),
+            new ActivityItemInput('La fusée parcourt 240 km en 3 minutes. Combien en 1 minute ?', AnswerType::Number, ['value' => 80], hint: 'Partage en 3.', explanation: '240 ÷ 3 = 80.'),
+            new ActivityItemInput('Et en 2 minutes ?', AnswerType::Number, ['value' => 160], explanation: '80 × 2 = 160.'),
         ],
         ...$overrides,
     ]);
@@ -260,4 +261,45 @@ test('le journal ne garde ni le contenu de l’activité ni le prénom de l’en
     expect($journal)->not->toContain('Lucas')
         ->not->toContain('240 km')
         ->not->toContain($parent->email);
+});
+
+describe('questions prêtes pour l’enfant', function (): void {
+    test('une question est complète selon son type', function (array $attributes, bool $complete): void {
+        $item = ActivityItem::factory()->make(['prompt' => 'Q', 'explanation' => 'E', ...$attributes]);
+
+        expect($item->isComplete())->toBe($complete);
+    })->with([
+        'nombre' => [['answer_type' => AnswerType::Number, 'expected_answer' => ['value' => 2.5]], true],
+        'nombre absent' => [['answer_type' => AnswerType::Number, 'expected_answer' => ['value' => null]], false],
+        'texte' => [['answer_type' => AnswerType::Text, 'expected_answer' => ['accepted' => ['Mars']]], true],
+        'texte vide' => [['answer_type' => AnswerType::Text, 'expected_answer' => ['accepted' => [' ']]], false],
+        'choix unique' => [['answer_type' => AnswerType::SingleChoice, 'prompt_payload' => ['choices' => ['A', 'B']], 'expected_answer' => ['index' => 1]], true],
+        'choix hors liste' => [['answer_type' => AnswerType::SingleChoice, 'prompt_payload' => ['choices' => ['A', 'B']], 'expected_answer' => ['index' => 2]], false],
+        'proposition vide' => [['answer_type' => AnswerType::SingleChoice, 'prompt_payload' => ['choices' => ['A', '']], 'expected_answer' => ['index' => 0]], false],
+        'choix multiple' => [['answer_type' => AnswerType::MultipleChoice, 'prompt_payload' => ['choices' => ['A', 'B', 'C']], 'expected_answer' => ['indexes' => [0, 2]]], true],
+        'aucune bonne réponse' => [['answer_type' => AnswerType::MultipleChoice, 'prompt_payload' => ['choices' => ['A', 'B']], 'expected_answer' => ['indexes' => []]], false],
+        'sans énoncé' => [['prompt' => ' ', 'answer_type' => AnswerType::Number, 'expected_answer' => ['value' => 1]], false],
+        'sans explication' => [['explanation' => null, 'answer_type' => AnswerType::Number, 'expected_answer' => ['value' => 1]], false],
+    ]);
+
+    test('une question incomplète empêche la validation', function (): void {
+        $activity = Activity::factory()->status(ActivityStatus::Draft)->create();
+        $activity->items()->first()?->update(['explanation' => null]);
+
+        resolve(ChangeActivityStatus::class)($activity, ActivityStatus::Approved, $activity->owner);
+    })->throws(ActivityRuleViolation::class, 'explication');
+
+    test('créer et valider d’un coup', function (): void {
+        $activity = resolve(CreateActivity::class)(User::factory()->parent()->create(), activityInput(), approve: true);
+
+        expect($activity->status)->toBe(ActivityStatus::Approved)
+            ->and(array_column(activityLog(), 'event'))->toBe(['created', 'status_changed']);
+    });
+
+    test('une activité ni brouillon ni validée ne se modifie pas', function (ActivityStatus $status): void {
+        $activity = Activity::factory()->status($status)->create();
+
+        resolve(UpdateActivity::class)($activity, activityInput(), $activity->owner);
+    })->with([ActivityStatus::PendingReview, ActivityStatus::Archived, ActivityStatus::Generating])
+        ->throws(ActivityRuleViolation::class);
 });

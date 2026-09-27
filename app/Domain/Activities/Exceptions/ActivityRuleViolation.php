@@ -19,6 +19,16 @@ final class ActivityRuleViolation extends DomainException
         return new self('Une activité sans question ne peut pas être validée.');
     }
 
+    public static function incompleteItems(): self
+    {
+        return new self('Chaque question doit avoir un énoncé, une réponse attendue et une explication.');
+    }
+
+    public static function notEditable(ActivityStatus $status): self
+    {
+        return new self("Une activité « {$status->value} » ne se modifie pas.");
+    }
+
     public static function notDuplicable(ActivityStatus $status): self
     {
         return new self("Une activité « {$status->value} » n'a pas de contenu à dupliquer.");

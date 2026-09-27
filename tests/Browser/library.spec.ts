@@ -61,7 +61,7 @@ test('le menu d’une carte se pilote au clavier', async ({ page }) => {
     const trigger = page.getByRole('button', { name: 'Actions sur « Mission Mars »' });
     await trigger.focus();
     await page.keyboard.press('ArrowDown');
-    await expect(page.getByRole('menuitem', { name: 'Dupliquer' })).toBeFocused();
+    await expect(page.getByRole('menuitem', { name: 'Modifier' })).toBeFocused();
     await page.keyboard.press('End');
     await expect(page.getByRole('menuitem', { name: 'Supprimer' })).toBeFocused();
     await page.keyboard.press('Escape');

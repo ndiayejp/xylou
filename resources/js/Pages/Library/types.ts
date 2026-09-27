@@ -40,4 +40,4 @@ export interface LibraryOptions {
     statuses: LibraryStatus[];
 }
 
-export type LibraryAction = 'duplicate' | 'archive' | 'unarchive' | 'delete' | 'restore';
+export type LibraryAction = 'edit' | 'duplicate' | 'archive' | 'unarchive' | 'delete' | 'restore';

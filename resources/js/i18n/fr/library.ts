@@ -50,7 +50,9 @@ export default {
         purge: 'Effacée définitivement le {date}',
         restore: 'Restaurer',
     },
+    create: 'Nouvelle activité',
     actions: {
+        edit: 'Modifier',
         duplicate: 'Dupliquer',
         archive: 'Archiver',
         unarchive: 'Remettre dans la bibliothèque',

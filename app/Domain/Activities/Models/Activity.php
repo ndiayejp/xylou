@@ -8,6 +8,7 @@ use App\Domain\Activities\Enums\ActivityDifficulty;
 use App\Domain\Activities\Enums\ActivityFormat;
 use App\Domain\Activities\Enums\ActivitySource;
 use App\Domain\Activities\Enums\ActivityStatus;
+use App\Domain\Activities\Exceptions\ActivityRuleViolation;
 use App\Domain\Activities\Policies\ActivityPolicy;
 use App\Domain\Children\Models\ChildProfile;
 use App\Domain\Curriculum\Models\Skill;
@@ -162,6 +163,19 @@ class Activity extends Model
     protected function makeAllSearchableUsing(Builder $query): Builder
     {
         return $query->with(['skill:id,label', 'subject:id,key', 'universe:id,key']);
+    }
+
+    // Prête pour la relecture ou l'enfant : au moins une question, toutes complètes.
+    public function ensureReady(): void
+    {
+        $items = $this->items()->get();
+
+        if ($items->isEmpty()) {
+            throw ActivityRuleViolation::withoutItems();
+        }
+        if ($items->contains(fn (ActivityItem $item): bool => ! $item->isComplete())) {
+            throw ActivityRuleViolation::incompleteItems();
+        }
     }
 
     public function isOwnedBy(User $user): bool

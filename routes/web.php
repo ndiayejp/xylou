@@ -98,11 +98,21 @@ Route::middleware(['auth', 'verified', 'role:'.Role::Professional->value, 'two-f
         Route::get('bibliotheque', LibraryController::class)->name('library');
     });
 
-// Actions sur les activités, communes aux adultes (l'auteur seul, ActivityPolicy).
+// Activités, communes aux adultes (l'auteur seul, ActivityPolicy).
+Route::middleware(['auth', 'verified', 'role:'.Role::Parent->value.'|'.Role::Professional->value, 'two-factor.required'])
+    ->prefix('activites')
+    ->name('activities.')
+    ->group(function (): void {
+        Route::get('nouvelle', [ActivityController::class, 'create'])->name('create');
+        Route::post('/', [ActivityController::class, 'store'])->name('store');
+    });
+
 Route::middleware(['auth', 'verified', 'role:'.Role::Parent->value.'|'.Role::Professional->value, 'two-factor.required'])
     ->prefix('activites/{activity}')
     ->name('activities.')
     ->group(function (): void {
+        Route::get('modifier', [ActivityController::class, 'edit'])->name('edit');
+        Route::put('/', [ActivityController::class, 'update'])->name('update');
         Route::delete('/', [ActivityController::class, 'destroy'])->name('destroy');
         Route::post('dupliquer', DuplicateController::class)->name('duplicate');
         Route::post('archive', [ArchiveController::class, 'store'])->name('archive');
