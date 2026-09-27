@@ -40,6 +40,7 @@ Activités (un ensemble d'items sur une compétence, dans un univers, avec un fo
 - Filtres dans l'URL (`LibraryRequest`) ; une valeur inconnue est ignorée. Espace parent : sans `grade` dans l'URL, le niveau est celui de l'enfant courant ; `grade=` l'efface.
 - Filtre « Compétence » : seulement les compétences des activités de l'adulte (dans la matière choisie).
 - Une action devenue impossible (`ActivityRuleViolation`) revient avec l'erreur `activity` (`lang/fr/activities.php`), affichée en toast.
+- États : chargement (squelettes), vide, aucun résultat, corbeille vide, erreur de chargement avec « Réessayer » (`useFailedVisit`, filtres conservés) ; une action en échec affiche un toast.
 - Suppression et archivage proposent « Annuler » dans le toast (8 s). « Recommander » (étape 6) et « Sauvegarder » (étape 9) n'apparaissent pas encore.
 - **Recherche** (ADR 0017) : `q` = plein texte (Scout + Meilisearch, index `activities` sans rien sur l'enfant, corbeille comprise) ; `ask` = phrase interprétée par `InterpretLibrarySearch` (matière, classe, prénom d'un enfant → sa classe, durée `short` ≤ 10 min / `long` ≥ 15 min, difficulté, univers ; le reste devient `q`), puis redirection vers l'adresse filtrée avec « Compris comme … » (session flash `library.understood`).
 

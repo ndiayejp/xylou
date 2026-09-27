@@ -75,6 +75,11 @@ export default {
         title: 'Aucune activité ne correspond',
         text: 'Essayez d’enlever un filtre.',
     },
+    failed: {
+        title: 'Impossible de charger les activités',
+        text: 'Vérifiez votre connexion, puis réessayez. Vos filtres sont conservés.',
+        retry: 'Réessayer',
+    },
     trashEmpty: {
         title: 'La corbeille est vide',
         text: 'Une activité supprimée y reste 30 jours avant d’être effacée.',

@@ -94,3 +94,38 @@ test('une phrase devient des filtres, un mot mal écrit est retrouvé', async ({
         page.getByRole('heading', { name: 'Le journal de bord du capitaine' }),
     ).toBeVisible();
 });
+
+test('un chargement en échec propose « Réessayer », une action en échec le dit', async ({
+    page,
+}) => {
+    await openLibrary(page);
+
+    // Panne simulée du serveur sur le filtre « Français ».
+    const failing = /\/parent\/bibliotheque\?.*subject=french/;
+    await page.route(failing, (route) =>
+        route.fulfill({ status: 500, contentType: 'text/html', body: '<h1>Erreur</h1>' }),
+    );
+    await page.getByLabel('Matière').selectOption('french');
+
+    const failure = page
+        .getByRole('alert')
+        .filter({ hasText: 'Impossible de charger les activités' });
+    await expect(failure).toBeVisible();
+    await expectNoSeriousViolations(page);
+
+    await page.unroute(failing);
+    await page.getByRole('button', { name: 'Réessayer' }).click();
+    await expect(failure).toHaveCount(0);
+    await expect(
+        page.getByRole('heading', { name: 'Le journal de bord du capitaine' }),
+    ).toBeVisible();
+
+    await page.route(/\/activites\/.+\/dupliquer/, (route) =>
+        route.fulfill({ status: 500, body: '' }),
+    );
+    await page
+        .getByRole('button', { name: 'Actions sur « Le journal de bord du capitaine »' })
+        .click();
+    await page.getByRole('menuitem', { name: 'Dupliquer' }).click();
+    await expect(page.getByText('Cette action n’a pas abouti. Réessayez.')).toBeVisible();
+});

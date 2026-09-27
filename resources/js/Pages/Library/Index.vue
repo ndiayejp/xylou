@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import {
     ChevronLeft,
+    CloudOff,
+    RotateCw,
     ChevronRight,
     Library,
     Plus,
@@ -19,6 +21,7 @@ import XFilterSelect, { type XFilterOption } from '@/Components/ui/XFilterSelect
 import XInput from '@/Components/ui/XInput.vue';
 import XSegmented from '@/Components/ui/XSegmented.vue';
 import XSkeleton from '@/Components/ui/XSkeleton.vue';
+import { useFailedVisit } from '@/Composables/useFailedVisit';
 import { useToasts } from '@/Composables/useToasts';
 import AccountSpace from '@/Layouts/AccountSpace.vue';
 import ActivityCard from './Partials/ActivityCard.vue';
@@ -61,21 +64,35 @@ watch(
 
 // Filtres : chaque changement recharge la page (URL partageable). « grade » est toujours envoyé :
 // vide, il annule le niveau pré-rempli avec la classe de l'enfant.
+const { failed, track } = useFailedVisit();
+
+// Chargement de la liste : « Réessayer » rejoue le dernier.
+let lastLoad: () => void = () => router.reload(track(loadOptions()));
+
+function loadOptions() {
+    return {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+        onStart: () => (loading.value = true),
+        onFinish: () => (loading.value = false),
+    };
+}
+
+function load(url: string, data: Record<string, string> = {}): void {
+    lastLoad = () => router.get(url, data, track(loadOptions()));
+    lastLoad();
+}
+
+function retry(): void {
+    lastLoad();
+}
+
 function visit(extra: Record<string, string> = {}): void {
     const query = Object.fromEntries(
         Object.entries(state.value).filter(([key, value]) => value !== '' || key === 'grade'),
     );
-    router.get(
-        route(`${props.space}.library`),
-        { ...query, ...extra },
-        {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
-            onStart: () => (loading.value = true),
-            onFinish: () => (loading.value = false),
-        },
-    );
+    load(route(`${props.space}.library`), { ...query, ...extra });
 }
 
 function apply(next: Partial<LibraryFilters>): void {
@@ -257,19 +274,26 @@ function act(activity: LibraryActivity, action: LibraryAction): void {
     const { method, route: name } = requests[action];
     const reverse = undo[action];
 
-    router.visit(route(name, activity.id), {
-        method,
-        preserveScroll: true,
-        onSuccess: () =>
-            push({
-                message: t(toasts[action]),
-                ...(reverse && {
-                    actionLabel: t('library.toasts.undo'),
-                    onAction: () => act(activity, reverse),
-                }),
-            }),
-        onError: (errors) => push({ message: errors.activity ?? t('library.toasts.error') }),
-    });
+    router.visit(
+        route(name, activity.id),
+        track(
+            {
+                method,
+                preserveScroll: true,
+                onSuccess: () =>
+                    push({
+                        message: t(toasts[action]),
+                        ...(reverse && {
+                            actionLabel: t('library.toasts.undo'),
+                            onAction: () => act(activity, reverse),
+                        }),
+                    }),
+                onError: (errors) =>
+                    push({ message: errors.activity ?? t('library.toasts.error') }),
+            },
+            () => push({ message: t('library.toasts.error') }),
+        ),
+    );
 }
 </script>
 
@@ -369,6 +393,23 @@ function act(activity: LibraryActivity, action: LibraryAction): void {
                 </XCard>
             </div>
 
+            <XCard v-else-if="failed" padding="lg" class="flex min-h-[260px] items-center">
+                <XEmptyState
+                    :icon="CloudOff"
+                    tone="red"
+                    :title="$t('library.failed.title')"
+                    :description="$t('library.failed.text')"
+                    class="mx-auto"
+                    role="alert"
+                >
+                    <template #actions>
+                        <XButton :icon="RotateCw" @click="retry">
+                            {{ $t('library.failed.retry') }}
+                        </XButton>
+                    </template>
+                </XEmptyState>
+            </XCard>
+
             <XCard
                 v-else-if="activities.data.length === 0"
                 padding="lg"
@@ -421,24 +462,25 @@ function act(activity: LibraryActivity, action: LibraryAction): void {
                 :aria-label="$t('library.pagination.label')"
                 class="mt-6 flex justify-between"
             >
-                <Link
+                <a
                     v-if="activities.prev"
                     :href="activities.prev"
-                    preserve-scroll
                     class="link inline-flex items-center gap-1"
+                    @click.prevent="load(activities.prev)"
                 >
                     <ChevronLeft :size="18" aria-hidden="true" />
                     {{ $t('library.pagination.previous') }}
-                </Link>
+                </a>
                 <span v-else />
-                <Link
+                <a
                     v-if="activities.next"
                     :href="activities.next"
                     class="link inline-flex items-center gap-1"
+                    @click.prevent="load(activities.next)"
                 >
                     {{ $t('library.pagination.next') }}
                     <ChevronRight :size="18" aria-hidden="true" />
-                </Link>
+                </a>
             </nav>
         </template>
     </AccountSpace>
