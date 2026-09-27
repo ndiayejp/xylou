@@ -25,6 +25,15 @@ Activités (un ensemble d'items sur une compétence, dans un univers, avec un fo
 - **Journal** `activities` : `created`, `duplicated`, `status_changed` (`from`, `to`), `deleted`, `restored`, avec l'auteur. L'ULID est dans les propriétés (`activity`), car `subject_id` du journal est un entier. Jamais de titre ni de contenu : ils peuvent citer l'enfant.
 - **Types de réponse** : Enum `AnswerType` (§15.3) ; la forme de `expected_answer` sera fixée avec l'éditeur (PR 5) et le moteur d'exercice (étape 6).
 
+## Bibliothèque
+
+- Routes `parent.library` et `pro.library` (`LibraryController`, page `Library/Index`) ; actions communes sous `activities.*` (`destroy`, `duplicate`, `archive`, `unarchive`, `restore` lié avec `withTrashed`), réservées à l'auteur.
+- `LibraryQuery` : activités de l'adulte, filtrées (matière, compétence, niveau, durée, difficulté, thème, statut), les plus récentes d'abord, 24 par page. Sans statut : tout sauf les archives ; statut `deleted` : la corbeille, avec la date d'effacement définitif.
+- Filtres dans l'URL (`LibraryRequest`) ; une valeur inconnue est ignorée. Espace parent : sans `grade` dans l'URL, le niveau est celui de l'enfant courant ; `grade=` l'efface.
+- Filtre « Compétence » : seulement les compétences des activités de l'adulte (dans la matière choisie).
+- Une action devenue impossible (`ActivityRuleViolation`) revient avec l'erreur `activity` (`lang/fr/activities.php`), affichée en toast.
+- Suppression et archivage proposent « Annuler » dans le toast (8 s). « Modifier » (éditeur, PR 5), « Recommander » (étape 6) et « Sauvegarder » (étape 9) n'apparaissent pas encore. Recherche plein texte : PR 4.
+
 ## Actions
 
 | Action | Rôle |
@@ -40,4 +49,6 @@ Activités (un ensemble d'items sur une compétence, dans un univers, avec un fo
 ## Tests
 
 - `tests/Unit/Activities/ActivityStatusTest.php` : les 36 couples de statuts.
+- `tests/Feature/Activities/LibraryTest.php` : accès par espace, contenu, corbeille, pagination, chaque filtre, niveau pré-rempli, actions et refus.
+- `tests/Browser/library.spec.ts` : filtres, suppression annulée depuis le toast, menu au clavier, axe.
 - `tests/Feature/Activities/ActivityActionsTest.php` : chaque transition interdite refusée sans effet, création, duplication, archivage, corbeille et effacement à 30 jours, autorisations, journal sans donnée personnelle.

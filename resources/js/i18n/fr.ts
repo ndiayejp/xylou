@@ -1,12 +1,41 @@
 // Messages de l'interface (vue-i18n). Les messages du serveur restent dans lang/fr.
 import landing from './fr/landing';
 import legal from './fr/legal';
+import library from './fr/library';
 import onboarding from './fr/onboarding';
 
 export default {
     landing,
     legal,
+    library,
     onboarding,
+    // Libellés du référentiel (clés de database/data/curriculum et des univers).
+    subjects: {
+        maths: 'Mathématiques',
+        french: 'Français',
+    },
+    universes: {
+        space: 'Espace',
+        football: 'Football',
+        forest: 'Forêt',
+    },
+    activities: {
+        statuses: {
+            generating: 'En préparation',
+            generation_failed: 'Échec de génération',
+            pending_review: 'À valider',
+            draft: 'Brouillon',
+            approved: 'Validée',
+            archived: 'Archivée',
+        },
+        difficulties: {
+            discovery: 'Découverte',
+            practice: 'Entraînement',
+            consolidation: 'Consolidation',
+            challenge: 'Défi',
+        },
+        ai: 'Générée par l’IA',
+    },
     layout: {
         skipToContent: 'Aller au contenu',
         mainNav: 'Navigation principale',

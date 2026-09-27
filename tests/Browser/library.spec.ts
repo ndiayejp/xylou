@@ -1,0 +1,70 @@
+import AxeBuilder from '@axe-core/playwright';
+import { expect, test, type Page } from '@playwright/test';
+
+// Bibliothèque de démonstration du DatabaseSeeder (parent@example.com, niveau CE2).
+async function openLibrary(page: Page): Promise<void> {
+    await page.goto('/login');
+    await page.locator('input[type="email"]').fill('parent@example.com');
+    await page.locator('input[type="password"]').fill('password');
+    await page.locator('input[type="password"]').press('Enter');
+    await expect(page).toHaveURL(/\/parent$/);
+    // Sans niveau : la liste ne dépend pas de l'enfant resté sélectionné.
+    await page.goto('/parent/bibliotheque?grade=');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Bibliothèque');
+}
+
+async function expectNoSeriousViolations(page: Page): Promise<void> {
+    const { violations } = await new AxeBuilder({ page }).analyze();
+
+    expect(violations.filter((v) => v.impact === 'serious' || v.impact === 'critical')).toEqual([]);
+}
+
+test('la bibliothèque se filtre, les archives restent à part', async ({ page }) => {
+    await openLibrary(page);
+
+    await expect(page.getByRole('heading', { name: 'Mission Mars' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Tirs au but multiplicatifs' })).toHaveCount(0);
+    await expectNoSeriousViolations(page);
+
+    await page.getByLabel('Matière').selectOption('french');
+    await expect(page).toHaveURL(/subject=french/);
+    await expect(
+        page.getByRole('heading', { name: 'Le journal de bord du capitaine' }),
+    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Mission Mars' })).toHaveCount(0);
+
+    await page.getByRole('button', { name: 'Effacer' }).first().click();
+    await page.getByLabel('Statut').selectOption('archived');
+    await expect(page.getByRole('heading', { name: 'Tirs au but multiplicatifs' })).toBeVisible();
+    await expectNoSeriousViolations(page);
+});
+
+test('supprimer une activité puis annuler depuis le toast', async ({ page }) => {
+    await openLibrary(page);
+
+    await page.getByRole('button', { name: 'Actions sur « La fusée des tables »' }).click();
+    await expect(page.getByRole('menu')).toBeVisible();
+    await expectNoSeriousViolations(page);
+    await page.getByRole('menuitem', { name: 'Supprimer' }).click();
+
+    await expect(page.getByText('Activité supprimée')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'La fusée des tables' })).toHaveCount(0);
+
+    await page.getByRole('button', { name: 'Annuler' }).click();
+    await expect(page.getByText('Activité restaurée')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'La fusée des tables' })).toBeVisible();
+});
+
+test('le menu d’une carte se pilote au clavier', async ({ page }) => {
+    await openLibrary(page);
+
+    const trigger = page.getByRole('button', { name: 'Actions sur « Mission Mars »' });
+    await trigger.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(page.getByRole('menuitem', { name: 'Dupliquer' })).toBeFocused();
+    await page.keyboard.press('End');
+    await expect(page.getByRole('menuitem', { name: 'Supprimer' })).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('menu')).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+});

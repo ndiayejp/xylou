@@ -7,7 +7,7 @@ namespace App\Http\Middleware;
 use App\Domain\Children\Models\ChildProfile;
 use App\Domain\Identity\Enums\Role;
 use App\Domain\Identity\Models\User;
-use App\Http\Controllers\Parent\CurrentChildController;
+use App\Http\Navigation\CurrentChild;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
@@ -68,21 +68,18 @@ class HandleInertiaRequests extends Middleware
      */
     private function parentSpace(Request $request, User $user): array
     {
-        $children = array_values(ChildProfile::query()->ownedBy($user)->get()
-            ->map(fn (ChildProfile $child): array => [
-                'id' => $child->id,
-                'firstName' => $child->first_name,
-                'grade' => $child->grade->value,
-                'birthYear' => $child->birth_year,
-            ])
-            ->all());
-
-        $ids = array_column($children, 'id');
-        $selected = $request->session()->get(CurrentChildController::SESSION_KEY);
+        $profiles = ChildProfile::query()->ownedBy($user)->get();
 
         return [
-            'children' => $children,
-            'currentChildId' => in_array($selected, $ids, true) ? $selected : ($ids[0] ?? null),
+            'children' => array_values($profiles
+                ->map(fn (ChildProfile $child): array => [
+                    'id' => $child->id,
+                    'firstName' => $child->first_name,
+                    'grade' => $child->grade->value,
+                    'birthYear' => $child->birth_year,
+                ])
+                ->all()),
+            'currentChildId' => CurrentChild::of($request, $user, $profiles)?->id,
         ];
     }
 }
