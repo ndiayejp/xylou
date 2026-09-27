@@ -78,7 +78,8 @@ describe('création', function (): void {
 
         [$number, $text, $single, $multiple] = $activity->items->all();
         expect($number->answer_type)->toBe(AnswerType::Number)
-            ->and($number->expected_answer)->toBe(['value' => 24, 'unit' => 'bouteilles'])
+            // jsonb (PostgreSQL) range les clés à sa façon : on compare sans l'ordre.
+            ->and($number->expected_answer)->toEqual(['value' => 24, 'unit' => 'bouteilles'])
             ->and($number->tolerance)->toBeNull()
             ->and($number->hint)->toBe('Multiplie.')
             ->and($text->expected_answer)->toBe(['accepted' => ['Mars', 'mars']])
