@@ -54,7 +54,9 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User $owner
  * @property-read ChildProfile|null $childProfile
+ * @property-read Subject $subject
  * @property-read Skill $skill
+ * @property-read Universe|null $universe
  * @property-read Collection<int, ActivityItem> $items
  */
 #[UseFactory(ActivityFactory::class)]

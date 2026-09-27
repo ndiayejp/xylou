@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Domain\Activities\Exceptions\ActivityRuleViolation;
 use App\Http\Middleware\EnsureKidSession;
 use App\Http\Middleware\EnsureTwoFactorIsEnabled;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -37,5 +38,6 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Règle métier refusée depuis l'interface (page périmée) : retour avec un message, pas d'erreur 500.
+        $exceptions->render(fn (ActivityRuleViolation $e) => back()->withErrors(['activity' => __('activities.refused')]));
     })->create();

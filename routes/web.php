@@ -3,9 +3,14 @@
 declare(strict_types=1);
 
 use App\Domain\Identity\Enums\Role;
+use App\Http\Controllers\Activities\ActivityController;
+use App\Http\Controllers\Activities\ArchiveController;
+use App\Http\Controllers\Activities\DuplicateController;
+use App\Http\Controllers\Activities\RestoreController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Kid\ExitController;
 use App\Http\Controllers\Kid\HomeController as KidHomeController;
+use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\Onboarding\ChildStepController;
 use App\Http\Controllers\Onboarding\DifficultiesStepController;
 use App\Http\Controllers\Onboarding\GoalsStepController;
@@ -72,6 +77,7 @@ Route::middleware(['auth', 'verified', 'role:'.Role::Parent->value])
         Route::get('/', ParentDashboardController::class)->name('dashboard');
         Route::post('current-child', CurrentChildController::class)->name('current-child');
         Route::post('children/{child}/kid-session', KidSessionController::class)->name('children.kid-session');
+        Route::get('bibliotheque', LibraryController::class)->name('library');
     });
 
 // Espace enfant (garde « kid ») ; le middleware KeepKidInKidSpace y retient l'enfant.
@@ -89,6 +95,19 @@ Route::middleware(['auth', 'verified', 'role:'.Role::Professional->value, 'two-f
     ->name('pro.')
     ->group(function (): void {
         Route::get('/', ProDashboardController::class)->name('dashboard');
+        Route::get('bibliotheque', LibraryController::class)->name('library');
+    });
+
+// Actions sur les activités, communes aux adultes (l'auteur seul, ActivityPolicy).
+Route::middleware(['auth', 'verified', 'role:'.Role::Parent->value.'|'.Role::Professional->value, 'two-factor.required'])
+    ->prefix('activites/{activity}')
+    ->name('activities.')
+    ->group(function (): void {
+        Route::delete('/', [ActivityController::class, 'destroy'])->name('destroy');
+        Route::post('dupliquer', DuplicateController::class)->name('duplicate');
+        Route::post('archive', [ArchiveController::class, 'store'])->name('archive');
+        Route::delete('archive', [ArchiveController::class, 'destroy'])->name('unarchive');
+        Route::post('restaurer', RestoreController::class)->withTrashed()->name('restore');
     });
 
 Route::middleware('auth')->group(function (): void {
